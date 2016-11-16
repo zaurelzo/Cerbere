@@ -1,0 +1,6 @@
+
+#tools
+sudo apt-get install python-pip libmysqlclient-dev python-dev python-mysqldb
+sudo pip install mysql
+sudo pip install MySQL-python
+sudo apt-get install python-mysql.connector

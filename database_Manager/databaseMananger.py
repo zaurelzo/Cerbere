@@ -36,6 +36,8 @@ class databaseManager:
 		self.cursor.execute(""" DROP TABLE IndexTable ;""")
 		self.cursor.execute(""" DROP TABLE Documents ;""")
 
+	
+
 if __name__ == '__main__':
 	d1= databaseManager()
 	d1.deleteTables()
