@@ -29,7 +29,25 @@ class databaseManager:
     	frequence int NOT NULL, \
     	FOREIGN KEY (idIndex) REFERENCES IndexTable(idIndex), \
     	FOREIGN KEY (idDocuments) REFERENCES  Documents(idDocuments) \
-		);""")		
+		);""")
+
+	def addElementsIndexTable(self,word):
+		try:
+			self.cursor.execute("""INSERT INTO IndexTable (word) VALUES (%s)""", [word])
+			self.conn.commit()
+		except:
+			print("ERROR WHEN ADD ELEMENT IN IndexTable")
+			self.conn.rollback()
+
+
+	def addElementDocumentsTable(self,title):
+		try:
+			self.cursor.execute("""INSERT INTO Documents (title) VALUES (%s)""", [title])
+			self.conn.commit()
+		except:
+			print("ERROR WHEN ADD ELEMENT IN Documents")
+			self.conn.rollback()
+
 
 	def deleteTables(self):
 		self.cursor.execute(""" DROP TABLE IndexDocumentsCorrespondences ;""")
@@ -40,5 +58,8 @@ class databaseManager:
 
 if __name__ == '__main__':
 	d1= databaseManager()
-	d1.deleteTables()
+	#d1.deleteTables()
 	#d1.createTables()
+	d1.addElementsIndexTable("madad")
+	d1.addElementDocumentsTable("la vie est belle")
+	#d1.addElementsIndexTable("dfsd")

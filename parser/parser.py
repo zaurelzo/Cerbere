@@ -42,10 +42,7 @@ class parser:
 		stemmer = PorterStemmer()
 		
 
-		#filter list using stop words and delete duplicates  
-		filter_words = set ([ word for word in list_of_words if not (word in stop_words_english or word in stop_words_french)] ) 
+		#filter list using stop words and apply stemming operation   
+		filter_words = set ([ stemmer.stem(word) for word in list_of_words if not (word in stop_words_english or word in stop_words_french)] ) 
 
-		#apply stemming operation  
-		filter_word_stemming = [stemmer.stem(word) for word in filter_words ] 
-
-		return filter_word_stemming
+		return filter_words
