@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from stop_words import get_stop_words
 #stemming 
 from nltk.stem.porter import *
-import time 
+
 
 class parser:
 	
@@ -49,14 +49,3 @@ class parser:
 		filter_word_stemming = [stemmer.stem(word) for word in filter_words ] 
 
 		return filter_word_stemming
-
-if __name__ == '__main__':
-	o1=parser()
-	start_time = time.clock()
-	for i in range (139):
-		#pas de fichier commençant avec le numéro 0 et 127
-		if i !=0 and i!=127:
-			path = "../RessourcesProjet/corpus-utf8/D"+str(i)+".html"
-			o1.parse(path)
-			print ("done for : ", path)
-	print "=============: ", time.clock() - start_time, "seconds"
