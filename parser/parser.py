@@ -43,6 +43,6 @@ class parser:
 		
 
 		#filter list using stop words and apply stemming operation   
-		filter_words = set ([ stemmer.stem(word) for word in list_of_words if not (word in stop_words_english or word in stop_words_french)] ) 
+		filter_words = [ stemmer.stem(word) for word in list_of_words if not (word in stop_words_english or word in stop_words_french)] 
 
 		return filter_words

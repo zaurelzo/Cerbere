@@ -13,3 +13,5 @@ sudo pip install stop-words
 
 # for stemming operation 
 sudo pip install nltk
+
+#demander combien de mots clés les autres on trouvé! (39554 pour nous)
