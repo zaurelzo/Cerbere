@@ -35,7 +35,7 @@ class eval:
 		nb_pertinents_selectionnes=0
 		
 		for indice in range(0, taille_listes)
-			if liste_doc_pertinents[indice]==1 && liste_doc_selectionnes[indice]==1
+			if liste_doc_pertinents[indice]==1 and liste_doc_selectionnes[indice]==1:
 				
 				nb_pertinents_selectionnes=nb_pertinents_selectionnes+1
 				
