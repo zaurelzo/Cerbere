@@ -31,23 +31,36 @@ class databaseManager:
     	FOREIGN KEY (idDocuments) REFERENCES  Documents(idDocuments) \
 		);""")
 
-	def addElementsIndexTable(self,word):
+	def addElementsIndexTable(self,Listword):
 		try:
-			self.cursor.execute("""INSERT INTO IndexTable (word) VALUES (%s)""", [word])
+			for word in Listword:
+				self.cursor.execute("""INSERT INTO IndexTable (word) VALUES (%s)""", [word])
 			self.conn.commit()
 		except:
 			print("ERROR WHEN ADD ELEMENT IN IndexTable")
 			self.conn.rollback()
 
 
-	def addElementDocumentsTable(self,title):
+	def addElementDocumentsTable(self,ListTitle):
 		try:
-			self.cursor.execute("""INSERT INTO Documents (title) VALUES (%s)""", [title])
+			for title in ListTitle:
+				self.cursor.execute("""INSERT INTO Documents (title) VALUES (%s)""", [title])
 			self.conn.commit()
 		except:
 			print("ERROR WHEN ADD ELEMENT IN Documents")
 			self.conn.rollback()
 
+
+	def addElementIndexDocumentsCorrespondences(self,dic_idWord_IdDoc_Freq):
+		try:
+			for (idWord,idDoc),freq in dic_idWord_IdDoc_Freq.iteritems():
+				#print idWord,idDoc,freq
+				self.cursor.execute('INSERT INTO IndexDocumentsCorrespondences (idIndex,idDocuments,frequence) VALUES ("%s","%s","%s")' % \
+					(str(idWord),str(idDoc),str(freq)))
+			self.conn.commit()
+		except:
+			print("ERROR WHEN ADD ELEMENT IN IndexDocumentsCorrespondences")
+			self.conn.rollback()
 
 	def deleteTables(self):
 		self.cursor.execute(""" DROP TABLE IndexDocumentsCorrespondences ;""")
@@ -62,4 +75,7 @@ if __name__ == '__main__':
 	#d1.createTables()
 	d1.addElementsIndexTable("madad")
 	d1.addElementDocumentsTable("la vie est belle")
+	a={}
+	a[(1,25)]=78
+	d1.addElementIndexDocumentsCorrespondences(a)
 	#d1.addElementsIndexTable("dfsd")

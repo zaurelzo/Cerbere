@@ -27,13 +27,13 @@ if __name__ == '__main__':
 
 		#List wchich contains parsing list result for each file
 		list_Of_Result_ParsingDocument=[]
-
+		List_Title_Documents=[]
 		for num in range (139):
 			#pas de fichier commençant avec le numéro 0 et 127
 			if num !=0 and num!=127:
 
 				#add documents titles in the database
-				#myDatabaseManager.addElementDocumentsTable("D"+str(num)+".html")
+				List_Title_Documents.append("D"+str(num)+".html")
 				
 				path = "RessourcesProjet/corpus-utf8/D"+str(num)+".html"
 				resultList=myParser.parse(path)
@@ -47,16 +47,6 @@ if __name__ == '__main__':
 				print ("done for : ", path)
 
 		addWordsList.sort()
-		#print addWordsList
-
-		#=========================================================================
-		#Delete words with one occurences
-		#ListWordsWithMultipleOccurences=[]
-		#for word,occurence in (Counter(resultList)).iteritems():
-		#	if occurence==1:
-		#		ListWordsWithMultipleOccurences.append(word)
-		#print ListWordsWithMultipleOccurences
-		#=========================================================================
 		print ("Number of words :", len(addWordsList))
 
 
@@ -68,12 +58,13 @@ if __name__ == '__main__':
 
 			for word,freq in dicSubList.iteritems():
 				idWord=addWordsList.index(word)
-				globalDictWithFrequencies[(idWord,idDoc)]=freq
+				globalDictWithFrequencies[(idWord+1,idDoc+1)]=freq
 		print "len dic : ",len(globalDictWithFrequencies)
 
-		#add word in the database 
-		#for i,word in enumerate (addWordsList):
-		#	print ("adding word :", i)
-		#	myDatabaseManager.addElementsIndexTable(word)
+		print ("adding block of element in the database")
+		#add differents elements in the database
+		#myDatabaseManager.addElementDocumentsTable(List_Title_Documents)
+		#myDatabaseManager.addElementsIndexTable(addWordsList)
+		myDatabaseManager.addElementIndexDocumentsCorrespondences(globalDictWithFrequencies)
 
 		print "=============: ", time.clock() - start_time, "seconds"
