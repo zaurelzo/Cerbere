@@ -9,7 +9,7 @@ class eval:
 	#renvoi le nombre total de document pertinenets d'un fichier requêtes 
 	#OU
 	#Renvoie le nombre de documenst sélectionnés par notre recherche
-	def parseRes(self, chemin_fichier):
+	def parseResIrit(self, chemin_fichier):
 		file = open(chemin_fichier, "r+")
  
 		res= []
@@ -20,28 +20,30 @@ class eval:
 			res.append(int(number))
 		return res
 
-	def calculPoidsTot(self, liste_poids_doc):
+	def calculPoidsTotIrit(self, liste_poids_doc):
 
 		res = 0
 		for elt in list_poids_doc:
 			res=res+elt
 		return res
 
-	def calculPoidsPertinentsSelectionnes(self, liste_doc_pertinents, liste_doc_selectionnes):
+	def calculPoidsPertinentsSelectionnes(self, poids_tot_documents_pertinents, liste_doc_pertinents, liste_doc_selectionnes):
 		res=0
-
-		taille_listes = len(liste_doc_pertinents)
+		
+		taille_listes_doc_selectionnes = len(liste_doc_selectionnes)
+		liste_rappel_precision=[]
+		nb_pertinents_selectionnes=0
+		
 		for indice in range(0, taille_listes)
 			if liste_doc_pertinents[indice]==1 && liste_doc_selectionnes[indice]==1
-				res=res+1
-		return res
-
-	def CalulRappel(self, poids_documents_pertinents_selectionnes, poids_documents_pertinents):
-		return rappel=poids_documents_pertinents_selectionnes/poids_documents_pertinents
-
-	def CalulPrecision(self, poids_documents_pertinents_selectionnes, poids_documents_selectionnes):
-		return rappel=poids_documents_pertinents_selectionnes/poids_documents_selectionnes
-
+				
+				nb_pertinents_selectionnes=nb_pertinents_selectionnes+1
+				
+				rappel=nb_pertinents_selectionnes/poids_tot_documents_pertinents
+				precision = nb_pertinents_selectionnes/(indice+1)
+				
+				liste_rappel_precision.append((rappel, precision))
+		return liste_rappel_precision
 
 #if __name__ == '__main__':
 	#o1=eval()
