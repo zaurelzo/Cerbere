@@ -32,7 +32,7 @@ if __name__ == '__main__':
 			#pas de fichier commençant avec le numéro 0 et 127
 			if num !=0 and num!=127:
 
-				#add documents titles in the database
+				#add documents titles 
 				List_Title_Documents.append("D"+str(num)+".html")
 				
 				path = "RessourcesProjet/corpus-utf8/D"+str(num)+".html"
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 				#maintain a list of all parsing list result
 				list_Of_Result_ParsingDocument.append(resultList)
 
-				#to know wich words has been found in a previous file
+				#contain words which apppears once in all files
 				addWordsList= list(set(addWordsList+resultList))#list union
 				print ("done for : ", path)
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 		print ("Number of words :", len(addWordsList))
 
 
-		#create a global dict of frenquencies and add (idWord,idDoc,freq) in IndexDocumentsCorrespondences
+		#create a global dict of  where key is(idWord,idDoc) and value is freq 
 		globalDictWithFrequencies={}
 		for idDoc ,subList in enumerate(list_Of_Result_ParsingDocument):
 			print ("traitment dic  doc ", idDoc)
@@ -59,12 +59,13 @@ if __name__ == '__main__':
 			for word,freq in dicSubList.iteritems():
 				idWord=addWordsList.index(word)
 				globalDictWithFrequencies[(idWord+1,idDoc+1)]=freq
+		
 		print "len dic : ",len(globalDictWithFrequencies)
 
-		print ("adding block of element in the database")
-		#add differents elements in the database
-		#myDatabaseManager.addElementDocumentsTable(List_Title_Documents)
-		#myDatabaseManager.addElementsIndexTable(addWordsList)
+		print ("adding block of elements in the database")
+		#add elements in the database
+		myDatabaseManager.addElementDocumentsTable(List_Title_Documents)
+		myDatabaseManager.addElementsIndexTable(addWordsList)
 		myDatabaseManager.addElementIndexDocumentsCorrespondences(globalDictWithFrequencies)
 
 		print "=============: ", time.clock() - start_time, "seconds"
