@@ -31,18 +31,31 @@ class parser:
 		# break multi-headlines into a line each 
 		chunks = (phrase.strip() for line in lines for phrase in line.split(" ")) 
 		# drop blank lines 
-		text = '\n'.join(chunk for chunk in chunks if chunk)
+		text = '\n'.join(chunk for chunk in chunks if chunk) 
 
-		list_of_words = text.split()
-		
-		#get french and english stop words
-		#stop_words_english = get_stop_words('en')
+		#convert all str objects to unicode objects (usefull when search words which are not stop words)
+		list_of_words=[]
+		for word in text.split():
+			if isinstance(word,str):
+				list_of_words.append(unicode(word,"utf-8,"))
+			else:
+				list_of_words.append(word)
+
+		#get french stop words
 		stop_words_french = get_stop_words('fr')
 		stemmer = FrenchStemmer()
 		Global_stop_words_List=["?",".","!",",","'","|","...",":","–","&","-","€"]+stop_words_french
+		
+		#convert all str objects to unicode objects (usefull when search words which are not stop words)
+		filter_stop_words_list=[]
+		for word in Global_stop_words_List:
+			if isinstance(word,str):
+				filter_stop_words_list.append(unicode(word,"utf-8,"))
+			else:
+				filter_stop_words_list.append(word)
 
 		#filter list using stop words and apply stemming operation   
-		filter_words = [ stemmer.stem(self.cleanWord(word.lower())) for word in list_of_words if  not ((word.lower() in Global_stop_words_List) or self.isUrl(word.lower())==True)] 
+		filter_words = [ stemmer.stem(self.cleanWord(word.lower())) for word in list_of_words if  not ((word.lower() in filter_stop_words_list) or self.isUrl(word.lower()))] 
 
 		return filter_words
 
@@ -67,7 +80,6 @@ class parser:
 
 if __name__ == '__main__':
 	o1=parser()
-	print o1.cleanWord("tech..nique")
-	for elt in o1.parse("../RessourcesProjet/corpus-utf8/D"+str(1)+".html"):
-		print elt
+	#print o1.cleanWord("tech..nique")
+	print o1.parse("../RessourcesProjet/corpus-utf8/D"+str(1)+".html")
 
