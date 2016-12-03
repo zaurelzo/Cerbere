@@ -44,28 +44,28 @@ if __name__ == '__main__':
 
 				#contain words which apppears once in all files
 				addWordsList= list(set(addWordsList+resultList))#list union
-				print ("done for : ", path)
+				print "parsing done for : "+ path
 
 		addWordsList.sort()
-		print ("Number of words :", len(addWordsList))
+		print ">>>>>>> Number of words :" + str(len(addWordsList))
 
 
 		#create a global dict of  where key is(idWord,idDoc) and value is freq 
 		globalDictWithFrequencies={}
 		for idDoc ,subList in enumerate(list_Of_Result_ParsingDocument):
-			print ("traitment dic  doc ", idDoc)
+			print "traitment doc : " + str(idDoc)
 			dicSubList=Counter(subList)
 
 			for word,freq in dicSubList.iteritems():
 				idWord=addWordsList.index(word)
 				globalDictWithFrequencies[(idWord+1,idDoc+1)]=freq
 		
-		print "len dic : ",len(globalDictWithFrequencies)
+		print ">>>>>>> length global dic : " + str(len(globalDictWithFrequencies))
 
-		print ("adding block of elements in the database")
+		print ">>>>>>> adding block of elements in the database"
 		#add elements in the database
 		myDatabaseManager.addElementDocumentsTable(List_Title_Documents)
 		myDatabaseManager.addElementsIndexTable(addWordsList)
 		myDatabaseManager.addElementIndexDocumentsCorrespondences(globalDictWithFrequencies)
 
-		print "=============: ", time.clock() - start_time, "seconds"
+		print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"
