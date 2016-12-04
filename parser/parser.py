@@ -44,8 +44,11 @@ class parser:
 		#get french stop words
 		stop_words_french = get_stop_words('fr')
 		stemmer = FrenchStemmer()
-		Global_stop_words_List=["?",".","!",",","'","|","...",":","–","&","-","€"]+stop_words_french
 		
+		#meilleure heuristique : au lien d'enlever les caractères 1 à 1, on se débarasse de ceux ayant une taille de 1 
+		#Global_stop_words_List=["?",".","!",",","'","|","...",":","–","&","-","€"]+stop_words_french
+		Global_stop_words_List=[word for word in list_of_words if len(word)==1] + stop_words_french
+
 		#convert all str objects to unicode objects (usefull when search words which are not stop words)
 		filter_stop_words_list=[]
 		for word in Global_stop_words_List:
@@ -54,8 +57,9 @@ class parser:
 			else:
 				filter_stop_words_list.append(word)
 
-		#filter list using stop words and apply stemming operation   
-		filter_words = [ stemmer.stem(self.cleanWord(word.lower())) for word in list_of_words if  not ((word.lower() in filter_stop_words_list) or self.isUrl(word.lower()))] 
+		#filter list using stop words and apply stemming operation 
+		list_of_words = [word.lower() for word in list_of_words]
+		filter_words = [ stemmer.stem(self.cleanWord(word)) for word in list_of_words if  not (word in filter_stop_words_list or self.isUrl(word)) ]
 
 		return filter_words
 
