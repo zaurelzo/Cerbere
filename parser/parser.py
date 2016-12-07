@@ -85,5 +85,10 @@ class parser:
 if __name__ == '__main__':
 	o1=parser()
 	#print o1.cleanWord("tech..nique")
-	print o1.parse("../RessourcesProjet/corpus-utf8/D"+str(1)+".html")
+	cpt=0
+	for elt in o1.parse("../RessourcesProjet/corpus-utf8/D"+str(13)+".html"):
+		print elt
+	
+
+
 
