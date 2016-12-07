@@ -19,17 +19,15 @@ class search:
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
 					if freq!= -1:
-						if keyword=="sy":
-							print freq,indiceDoc
 						sCourant= scoreNameDoc[idDoc][0]
 						sCourant=sCourant+freq
 						scoreNameDoc[idDoc]=(sCourant,scoreNameDoc[idDoc][1])
-		return scoreNameDoc
+		scoreNameDoc.sort(key=lambda tup: tup[0])
+		return scoreNameDoc[::-1]
 
 if __name__ == '__main__':
 	s=search()
 	for elt in s.runSearch(["omar", "sy", "intouchables"]):
-
 		if elt[0]!=0:
 			print elt
 

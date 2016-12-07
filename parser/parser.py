@@ -65,14 +65,14 @@ class parser:
 
 	#delete ... at the end of a word
 	def cleanWord(self,word):
-		Listind=range(0,len(word))
-		Listind=Listind[::-1]
-		result=word
-		for ind in Listind:
-			if word[ind]=='.':
-				result=result[0:ind]
-			else:
-				return result
+		result = word
+		result = result.strip(".")
+		result = result.strip(",")
+		result= result.strip(":")
+		result=result.strip(";")
+		result=result.strip("/")
+		result=result.strip("!")
+		result=result.strip("?")
 		return result
 
 	def isUrl(self,url):
@@ -87,7 +87,8 @@ if __name__ == '__main__':
 	#print o1.cleanWord("tech..nique")
 	cpt=0
 	for elt in o1.parse("../RessourcesProjet/corpus-utf8/D"+str(13)+".html"):
-		print elt
+		if elt=="sy":
+			print "found" 
 	
 
 
