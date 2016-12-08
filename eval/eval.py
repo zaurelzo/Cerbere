@@ -39,14 +39,11 @@ class eval:
 		
 		list_Qrels_sort=[]
 
-		#crée la nouvelle liste à partir des docs selectionnes
+		#on crée la nouvelle liste à partir des docs selectionnés
 		for (freq,nameDoc) in liste_doc_selectionnes:
 			elt = self.findindexInList((freq,nameDoc),liste_doc_pertinents)
 			list_Qrels_sort.append(elt)
 
-		#for elt in list_Qrels_sort:
-		#	if type(elt) is not tuple:
-		#		print elt
 		
 		taille_listes_doc_selectionnes = len ([elt for elt in liste_doc_selectionnes if elt[0]>0])
 		liste_rappel_precision=[(-1,-1) for elt in range (len(liste_doc_pertinents))]

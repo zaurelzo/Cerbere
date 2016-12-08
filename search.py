@@ -30,7 +30,7 @@ class search:
 			if (word in stop_words_french)==False:
 				list_of_words_request.append(stemmer.stem(word.lower()))
 
-		#list_of_words_request =[stemmer.stem(word.lower()) for word in list_of_words_request if not (word.lower() in stop_words_french)]
+
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
 
 		for idDoc in range(138):
