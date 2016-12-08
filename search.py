@@ -48,10 +48,10 @@ class search:
 
 if __name__ == '__main__':
 	s=search()
-	x=s.runSearch(["palmarès", "Globes" ,"de" ,"Cristal" ,"2012"])
+	x=s.runSearch(["Omar", "Sy", "Intouchables"])
 	for elt in x:
-		if elt[0]!=0:
-			print elt
+		#if elt[0]!=0:
+		print elt
 	print "============" + str(len (x))
 
 

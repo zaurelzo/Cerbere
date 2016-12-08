@@ -58,17 +58,29 @@ class parser:
 				filter_stop_words_list.append(word.lower())
 
 		#filter list using stop words and apply stemming operation 
-		filter_words = [ stemmer.stem(self.cleanWord(word)) for word in list_of_words if  not (word in filter_stop_words_list or self.isUrl(word)) ]
+
+
+		filter_words = []
+
+		for word in list_of_words:
+			word = word.lower()
+			if not self.isUrl(word):
+				list_clean_words = self.cleanWord(word)
+				for clean_word in list_clean_words:
+					if not (clean_word in filter_stop_words_list):
+						filter_words.append(stemmer.stem(clean_word))
 
 		return filter_words
 
 	#delete ... at the end of a word
 	def cleanWord(self,word):
-		result = word
-		toStrip=[",",".",":",";","!","?","/","-","_","}"]
-		for ponctuation in toStrip:
-			result=result.strip(ponctuation)
-		return result
+		#wordAux = word
+		return re.findall(r"[a-z0-9]+", word)
+		#toStrip=[",",".",":",";","!","?","/","-","_","}"]
+		#for ponctuation in toStrip:
+		#	result=result.strip(ponctuation)
+
+		#return result
 
 	def isUrl(self,url):
 		if (re.match('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)):
@@ -79,8 +91,10 @@ class parser:
 
 if __name__ == '__main__':
 	o1=parser()
+	#print o1.cleanWord(u"technique...")
 	#print o1.cleanWord("tech..nique")
 	cpt=0
 
 	l=  o1.parse("../RessourcesProjet/corpus-utf8/D"+str(1)+".html")
+	print l
 	 
