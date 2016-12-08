@@ -47,6 +47,8 @@ if __name__ == '__main__':
 				print "parsing done for : "+ path
 
 		addWordsList.sort()
+		#for word in addWordsList:
+		#	print "===> " +  word
 		print ">>>>>>> Number of words :" + str(len(addWordsList))
 
 

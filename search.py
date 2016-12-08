@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from database_Manager.databaseManager import *
+#stemming 
+from nltk.stem.snowball import FrenchStemmer
+#stop words 
+from stop_words import get_stop_words
+
 
 class search:
 	"""docstring for Search"""
@@ -9,12 +14,28 @@ class search:
 		self.db = databaseManager()
 
 	def runSearch(self, list_keywords):
-		list_keywords=[word.lower() for word in list_keywords]
+		stemmer = FrenchStemmer()
+		stop_words_french = get_stop_words('fr')
+		stop_words_french = [word.lower() for word in stop_words_french]
+
+		
+		list_of_words_request=[]
+		for word in list_keywords:
+			if isinstance(word,str):
+				word=word.decode("utf-8").lower()
+			else:
+				word=word.lower()
+
+			if (word in stop_words_french)==False:
+				list_of_words_request.append(stemmer.stem(word.lower()))
+
+		#list_of_words_request =[stemmer.stem(word.lower()) for word in list_of_words_request if not (word.lower() in stop_words_french)]
 		scoreNameDoc=[(0, "D"+str(i+1)+"html") for i in range(138)]
+
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
 			if indiceDoc != 127:
-				for keyword in list_keywords:
+				for keyword in list_of_words_request:
 
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
@@ -27,9 +48,11 @@ class search:
 
 if __name__ == '__main__':
 	s=search()
-	for elt in s.runSearch(["omar", "sy", "intouchables"]):
+	x=s.runSearch(["palmarès", "Globes" ,"de" ,"Cristal" ,"2012"])
+	for elt in x:
 		if elt[0]!=0:
 			print elt
+	print "============" + str(len (x))
 
 
 

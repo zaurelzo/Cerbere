@@ -37,9 +37,9 @@ class parser:
 		list_of_words=[]
 		for word in text.split():
 			if isinstance(word,str):
-				list_of_words.append(unicode(word,"utf-8,"))
+				list_of_words.append(word.decode("utf-8").lower())
 			else:
-				list_of_words.append(word)
+				list_of_words.append(word.lower())
 
 		#get french stop words
 		stop_words_french = get_stop_words('fr')
@@ -53,12 +53,11 @@ class parser:
 		filter_stop_words_list=[]
 		for word in Global_stop_words_List:
 			if isinstance(word,str):
-				filter_stop_words_list.append(unicode(word,"utf-8,"))
+				filter_stop_words_list.append(word.decode("utf-8").lower())
 			else:
-				filter_stop_words_list.append(word)
+				filter_stop_words_list.append(word.lower())
 
 		#filter list using stop words and apply stemming operation 
-		list_of_words = [word.lower() for word in list_of_words]
 		filter_words = [ stemmer.stem(self.cleanWord(word)) for word in list_of_words if  not (word in filter_stop_words_list or self.isUrl(word)) ]
 
 		return filter_words
@@ -66,13 +65,9 @@ class parser:
 	#delete ... at the end of a word
 	def cleanWord(self,word):
 		result = word
-		result = result.strip(".")
-		result = result.strip(",")
-		result= result.strip(":")
-		result=result.strip(";")
-		result=result.strip("/")
-		result=result.strip("!")
-		result=result.strip("?")
+		toStrip=[",",".",":",";","!","?","/","-","_","}"]
+		for ponctuation in toStrip:
+			result=result.strip(ponctuation)
 		return result
 
 	def isUrl(self,url):
@@ -86,10 +81,6 @@ if __name__ == '__main__':
 	o1=parser()
 	#print o1.cleanWord("tech..nique")
 	cpt=0
-	for elt in o1.parse("../RessourcesProjet/corpus-utf8/D"+str(13)+".html"):
-		if elt=="sy":
-			print "found" 
-	
 
-
-
+	l=  o1.parse("../RessourcesProjet/corpus-utf8/D"+str(1)+".html")
+	 
