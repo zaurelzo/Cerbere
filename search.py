@@ -7,6 +7,7 @@ from nltk.stem.snowball import FrenchStemmer
 #stop words 
 from stop_words import get_stop_words
 
+from eval.eval import * 
 
 class search:
 	"""docstring for Search"""
@@ -30,7 +31,7 @@ class search:
 				list_of_words_request.append(stemmer.stem(word.lower()))
 
 		#list_of_words_request =[stemmer.stem(word.lower()) for word in list_of_words_request if not (word.lower() in stop_words_french)]
-		scoreNameDoc=[(0, "D"+str(i+1)+"html") for i in range(138)]
+		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
 
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
@@ -47,13 +48,14 @@ class search:
 		return scoreNameDoc[::-1]
 
 if __name__ == '__main__':
-	s=search()
-	x=s.runSearch(["Omar", "Sy", "Intouchables"])
-	for elt in x:
-		#if elt[0]!=0:
-		print elt
-	print "============" + str(len (x))
-
+	search_obj=search()
+	eval_obj= eval()
+	list_doc_pertinant= eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ3.txt")
+	list_doc_selectionnes=search_obj.runSearch(["personne", "récompensée", "Intouchables"])
+	#for elt in list_doc_selectionnes:
+	#	print elt
+	print eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes)
+	
 
 
 

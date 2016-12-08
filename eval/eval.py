@@ -9,7 +9,7 @@ class eval:
 	#renvoi le nombre total de document pertinenets d'un fichier requêtes 
 	#OU
 	#Renvoie le nombre de documenst sélectionnés par notre recherche
-	def parseResIrit(self, chemin_fichier):
+	def readFileQrels(self, chemin_fichier):
 		file = open(chemin_fichier, "r+")
  
 		res= []
@@ -17,36 +17,58 @@ class eval:
 		for line in file:
 			list_values=line.split()
 			number=list_values[1]
-			res.append(int(number))
+			res.append((int(number),list_values[0]))
 		return res
 
-	def calculPoidsTotIrit(self, liste_poids_doc):
-
+	def calculTotalPertinents(self, liste_poids_doc):
 		res = 0
-		for elt in list_poids_doc:
-			res=res+elt
+		cpt=0;
+		for elt in liste_poids_doc:
+			if cpt!=126:
+				res=res+elt[0]
+			cpt=cpt+1
 		return res
 
-	def calculPoidsPertinentsSelectionnes(self, poids_tot_documents_pertinents, liste_doc_pertinents, liste_doc_selectionnes):
-		res=0
+	def findindexInList(self,tuple_elt, liste_doc_pertinents ):
+		for ind,elt  in enumerate(liste_doc_pertinents):
+			if (elt[1]==tuple_elt[1]):
+				return liste_doc_pertinents[ind]
+
+
+	def calculRappelAndPrecision(self,liste_doc_pertinents, liste_doc_selectionnes):
 		
-		taille_listes_doc_selectionnes = len(liste_doc_selectionnes)
-		liste_rappel_precision=[]
+		list_Qrels_sort=[]
+
+		#crée la nouvelle liste à partir des docs selectionnes
+		for (freq,nameDoc) in liste_doc_selectionnes:
+			elt = self.findindexInList((freq,nameDoc),liste_doc_pertinents)
+			list_Qrels_sort.append(elt)
+
+		#for elt in list_Qrels_sort:
+		#	if type(elt) is not tuple:
+		#		print elt
+		
+		taille_listes_doc_selectionnes = len ([elt for elt in liste_doc_selectionnes if elt[0]>0])
+		liste_rappel_precision=[(-1,-1) for elt in range (len(liste_doc_pertinents))]
 		nb_pertinents_selectionnes=0
-		
-		for indice in range(0, taille_listes)
-			if liste_doc_pertinents[indice]==1 and liste_doc_selectionnes[indice]==1:
+
+		poids_tot_documents_pertinents= self.calculTotalPertinents(liste_doc_pertinents)
+
+		for indice in range(taille_listes_doc_selectionnes):
+			#print list_Qrels_sort[indice]
+			if list_Qrels_sort[indice][0]==1 and liste_doc_selectionnes[indice][0]>0:
 				
 				nb_pertinents_selectionnes=nb_pertinents_selectionnes+1
 				
-				rappel=nb_pertinents_selectionnes/poids_tot_documents_pertinents
-				precision = nb_pertinents_selectionnes/(indice+1)
+				rappel=float(nb_pertinents_selectionnes)/float(poids_tot_documents_pertinents)
+				precision = float(nb_pertinents_selectionnes)/float(indice+1)
 				
-				liste_rappel_precision.append((rappel, precision))
+				liste_rappel_precision[indice]=(rappel, precision)
+
 		return liste_rappel_precision
 
-#if __name__ == '__main__':
-	#o1=eval()
-	#res=eval.parseRes(o1,"/home/jordy/Bureau/RI/qrels/qrelQ1.txt")
+if __name__ == '__main__':
+	o1=eval()
+	print o1.parseResIrit("../RessourcesProjet/qrels/qrelQ1.txt")
 	#res1=eval.calculPoidsTot(o1,res)
 	#print res1

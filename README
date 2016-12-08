@@ -16,4 +16,4 @@ sudo pip install stop-words
 sudo pip install nltk
 
 
-#demander combien de mots clés les autres on trouvé! (39554 pour nous)
+#dans qr1, il manque le fichier 26 ! (malparido)
