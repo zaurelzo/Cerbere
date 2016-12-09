@@ -53,8 +53,9 @@ class eval:
 		poids_tot_documents_pertinents= self.calculTotalPertinents(liste_doc_pertinents)
 		rappel=0.0
 		precision=0.0
+		#print "range list doc select ", len(liste_doc_selectionnes)
 		for indice in range(len(liste_doc_selectionnes)):
-			#print list_Qrels_sort[indice]
+			#print "indice : ", indice, "nom du doc ", liste_doc_selectionnes[indice][1]
 			if list_Qrels_sort[indice][0]==1 and liste_doc_selectionnes[indice][0]>0:
 				
 				nb_pertinents_selectionnes=nb_pertinents_selectionnes+1
@@ -71,7 +72,7 @@ class eval:
 
 if __name__ == '__main__':
 	o1=eval()
-	print o1.parseResIrit("../RessourcesProjet/qrels/qrelQ1.txt")
+	#print o1.readFileQrels("../RessourcesProjet/qrels/qrelQ4.txt")
 	#res1=eval.calculPoidsTot(o1,res)
 	#print res1
 
