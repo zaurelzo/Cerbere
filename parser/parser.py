@@ -53,9 +53,9 @@ class parser:
 		filter_stop_words_list=[]
 		for word in Global_stop_words_List:
 			if isinstance(word,str):
-				filter_stop_words_list.append(word.decode("utf-8").lower())
+				filter_stop_words_list.append(stemmer.stem(word.decode("utf-8").lower()))
 			else:
-				filter_stop_words_list.append(word.lower())
+				filter_stop_words_list.append(stemmer.stem(word.lower()))
 
 
 		#filter list using stop words and apply stemming operation 

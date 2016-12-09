@@ -21,41 +21,49 @@ class search:
 	def runSearch(self, list_keywords):
 		stemmer = FrenchStemmer()
 		stop_words_french = get_stop_words('fr')
-		stop_words_french = [word.lower() for word in stop_words_french]
+		stop_words_french = [stemmer.stem(word.lower()) for word in stop_words_french]
 
 		
 		list_of_words_request=[]
 		for word in list_keywords:
+			#print word
 			if isinstance(word,str):
 				word=word.decode("utf-8").lower()
 			else:
 				word=word.lower()
 
 			if (word in stop_words_french)==False:
-				list_of_words_request.append(stemmer.stem(word.lower()))
+				list_of_words_request.append(stemmer.stem(word))
+		#for elt in list_of_words_request:
+		#	print elt
+
 
 
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
-		#nb_doc_collection = 138;
+		nb_doc_collection = 138;
 		#tab_avec_IDF = []
 		#tab_sans_IDF = []
+
+
+		#for elt in list_of_words_request:
+		#	print elt
 
 		print len(scoreNameDoc)
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
 			if indiceDoc != 127:
+
 				for keyword in list_of_words_request:
 
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
-
 					nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 					IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
 					if freq!= -1:
 						sCourant= scoreNameDoc[idDoc][0]
 						sCourant_avec_IDF=sCourant+(freq * IDF)
-						sCourant_sans_IDF=sCourant+freq 
-						scoreNameDoc[idDoc]=(sCourant_sans_IDF,scoreNameDoc[idDoc][1])
+						#sCourant_sans_IDF=sCourant+freq 
+						scoreNameDoc[idDoc]=(sCourant_avec_IDF,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
 		return scoreNameDoc[::-1]
 
@@ -83,8 +91,8 @@ if __name__ == '__main__':
 
 	tab_rappel=[]
 	tab_precision=[]
-	for ind,req in enumerate(Liste_requests):
-		list_doc_pertinant= eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
+	for ind,req in enumerate([["personnes", "Intouchables"]]):
+		list_doc_pertinant= eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(0+1)+".txt")
 		#print "requete en cours " , req
 		list_doc_selectionnes=search_obj.runSearch(req)
 		for elt in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
