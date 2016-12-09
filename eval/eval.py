@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 class eval:
 
 	def __init__(self):
@@ -73,3 +74,4 @@ if __name__ == '__main__':
 	print o1.parseResIrit("../RessourcesProjet/qrels/qrelQ1.txt")
 	#res1=eval.calculPoidsTot(o1,res)
 	#print res1
+

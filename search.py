@@ -9,6 +9,10 @@ from stop_words import get_stop_words
 
 from eval.eval import * 
 
+import math
+
+import matplotlib.pyplot as plt
+
 class search:
 	"""docstring for Search"""
 	def __init__(self):
@@ -32,6 +36,9 @@ class search:
 
 
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
+		nb_doc_collection = 138;
+		tab_avec_IDF = []
+		tab_sans_IDF = []
 
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
@@ -40,9 +47,13 @@ class search:
 
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
+
+					nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
+					IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
 					if freq!= -1:
 						sCourant= scoreNameDoc[idDoc][0]
-						sCourant=sCourant+freq
+						sCourant_avec_IDF=sCourant+(freq * IDF)
+						sCourant_sans_IDF=sCourant+freq 
 						scoreNameDoc[idDoc]=(sCourant,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
 		return scoreNameDoc[::-1]
@@ -54,9 +65,13 @@ if __name__ == '__main__':
 	list_doc_selectionnes=search_obj.runSearch(["personne", "récompensée", "Intouchables"])
 	#for elt in list_doc_selectionnes:
 	#	print elt
-	for elt in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
-		print elt
-	
+	tab_rappel=[]
+	tab_precision=[]
+	for (rappel, precision) in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
+		tab_rappel.append(rappel)
+		tab_precision.append(precision)
+	plt.plot(tab_rappel, tab_precision)
+	plt.show()	
 
 
 
