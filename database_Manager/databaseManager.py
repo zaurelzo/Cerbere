@@ -17,11 +17,16 @@ class databaseManager:
     	PRIMARY KEY(idIndex) \
 		);""")
 
+		print "--------------------------------------------------"
+
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS Documents(\
     	idDocuments int NOT NULL AUTO_INCREMENT, \
     	title varchar(250) NOT NULL, \
     	PRIMARY KEY(idDocuments) \
 		);""")
+
+
+		print "--------------------------------------------------"
 
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS IndexDocumentsCorrespondences(\
 		idIndex int NOT NULL, \
@@ -30,6 +35,9 @@ class databaseManager:
     	FOREIGN KEY (idIndex) REFERENCES IndexTable(idIndex), \
     	FOREIGN KEY (idDocuments) REFERENCES  Documents(idDocuments) \
 		);""")
+
+
+		print "-------------------------------------------------- FIN"
 
 	def addElementsIndexTable(self,Listword):
 		try:
@@ -84,16 +92,25 @@ class databaseManager:
 		else:
 			return -1
 
-	
+	def countNbAppareancesWord(self, idWord):
+		self.cursor.execute("""SELECT COUNT(idIndex) FROM IndexDocumentsCorrespondences WHERE idIndex ='%s'""" % (str(idWord)))
+		result = self.cursor.fetchone()
+		if result is not None:
+			return result[0]
+		else:
+			return -1
+
 if __name__ == '__main__':
 	d1= databaseManager()
 	#d1.deleteTables()
 	d1.createTables()
-	d1.addElementsIndexTable(["madad"])
-	d1.addElementDocumentsTable("la vie est belle")
-	d1.addElementIndexDocumentsCorrespondences({(1,1):23})
-	a={}
-	a[(1,25)]=78
+	#d1.addElementsIndexTable(["madad"])
+	#d1.addElementDocumentsTable("la vie est belle")
+	#d1.addElementIndexDocumentsCorrespondences({(1,1):23})
+	#d1.addElementIndexDocumentsCorrespondences({(1,2):20})
+	#d1.addElementIndexDocumentsCorrespondences({(2,1):23})
+	#a={}
+	#a[(1,25)]=78
 	#d1.addElementIndexDocumentsCorrespondences(a)
 	#d1.addElementsIndexTable("dfsd")
-	print d1.freqByIdWordIdDoc(1,1)
+	#print d1.countNbAppareancesWord(1)
