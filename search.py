@@ -54,7 +54,8 @@ if __name__ == '__main__':
 	list_doc_selectionnes=search_obj.runSearch(["personne", "récompensée", "Intouchables"])
 	#for elt in list_doc_selectionnes:
 	#	print elt
-	print eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes)
+	for elt in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
+		print elt
 	
 
 

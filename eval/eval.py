@@ -50,8 +50,9 @@ class eval:
 		nb_pertinents_selectionnes=0
 
 		poids_tot_documents_pertinents= self.calculTotalPertinents(liste_doc_pertinents)
-
-		for indice in range(taille_listes_doc_selectionnes):
+		rappel=0.0
+		precision=0.0
+		for indice in range(len(liste_doc_selectionnes)):
 			#print list_Qrels_sort[indice]
 			if list_Qrels_sort[indice][0]==1 and liste_doc_selectionnes[indice][0]>0:
 				
@@ -59,8 +60,11 @@ class eval:
 				
 				rappel=float(nb_pertinents_selectionnes)/float(poids_tot_documents_pertinents)
 				precision = float(nb_pertinents_selectionnes)/float(indice+1)
-				
-				liste_rappel_precision[indice]=(rappel, precision)
+			else:	
+				precision = float(nb_pertinents_selectionnes)/float(indice+1)
+			
+			liste_rappel_precision[indice]=(rappel, precision)			
+			
 
 		return liste_rappel_precision
 
