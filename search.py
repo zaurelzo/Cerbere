@@ -21,18 +21,22 @@ class search:
 	def runSearch(self, list_keywords):
 		stemmer = FrenchStemmer()
 		stop_words_french = get_stop_words('fr')
-		stop_words_french = [word.lower() for word in stop_words_french]
+		stop_words_french = [stemmer.stem(word.lower()) for word in stop_words_french]
 
 		
 		list_of_words_request=[]
 		for word in list_keywords:
+			#print word
 			if isinstance(word,str):
 				word=word.decode("utf-8").lower()
 			else:
 				word=word.lower()
 
 			if (word in stop_words_french)==False:
-				list_of_words_request.append(stemmer.stem(word.lower()))
+				list_of_words_request.append(stemmer.stem(word))
+		#for elt in list_of_words_request:
+		#	print elt
+
 
 
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
@@ -40,15 +44,19 @@ class search:
 		#tab_avec_IDF = []
 		#tab_sans_IDF = []
 
+
+		#for elt in list_of_words_request:
+		#	print elt
+
 		print len(scoreNameDoc)
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
 			if indiceDoc != 127:
+
 				for keyword in list_of_words_request:
 
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
-
 					nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 					#IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
 					if freq!= -1:
