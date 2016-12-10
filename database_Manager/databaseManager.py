@@ -103,12 +103,13 @@ class databaseManager:
 if __name__ == '__main__':
 	d1= databaseManager()
 	#d1.deleteTables()
-	d1.createTables()
+	#d1.createTables()
 	#d1.addElementsIndexTable(["madad"])
 	#d1.addElementDocumentsTable("la vie est belle")
-	#d1.addElementIndexDocumentsCorrespondences({(1,1):23})
-	#d1.addElementIndexDocumentsCorrespondences({(1,2):20})
-	#d1.addElementIndexDocumentsCorrespondences({(2,1):23})
+	d1.addElementIndexDocumentsCorrespondences([{(1,1):23}])
+	d1.addElementIndexDocumentsCorrespondences([{(1,2):20}])
+	d1.addElementIndexDocumentsCorrespondences([{(2,1):23}])
+	print d1.countNbAppareancesWord(1)
 	#a={}
 	#a[(1,25)]=78
 	#d1.addElementIndexDocumentsCorrespondences(a)
