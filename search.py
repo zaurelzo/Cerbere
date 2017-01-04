@@ -62,8 +62,8 @@ class search:
 					if freq!= -1:
 						sCourant= scoreNameDoc[idDoc][0]
 						sCourant_avec_IDF=sCourant+(freq * IDF)
-						#sCourant_sans_IDF=sCourant+freq 
-						scoreNameDoc[idDoc]=(sCourant_avec_IDF,scoreNameDoc[idDoc][1])
+						sCourant_sans_IDF=sCourant+freq 
+						scoreNameDoc[idDoc]=(sCourant_sans_IDF,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
 		return scoreNameDoc[::-1]
 
@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
 	tab_rappel=[]
 	tab_precision=[]
-	for ind,req in enumerate([["personnes", "Intouchables"]]):
-		list_doc_pertinant= eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(0+1)+".txt")
+	for ind,req in enumerate(Liste_requests):
+		list_doc_pertinant= eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
 		#print "requete en cours " , req
 		list_doc_selectionnes=search_obj.runSearch(req)
 		for elt in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
