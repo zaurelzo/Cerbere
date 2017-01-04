@@ -58,10 +58,14 @@ class search:
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
 					nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
-					IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
+					#IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
 					if freq!= -1:
 						sCourant= scoreNameDoc[idDoc][0]
-						sCourant_avec_IDF=sCourant+(freq * IDF)
+#<<<<<<< HEAD
+#						sCourant_avec_IDF=sCourant+(freq * IDF)
+#=======
+						#sCourant_avec_IDF=sCourant+(freq * IDF)
+#>>>>>>> ed90f6794413b247ef95ee35f4eb84d22af14c9c
 						sCourant_sans_IDF=sCourant+freq 
 						scoreNameDoc[idDoc]=(sCourant_sans_IDF,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
@@ -70,16 +74,6 @@ class search:
 if __name__ == '__main__':
 	search_obj=search()
 	eval_obj= eval()
-	#for elt in list_doc_selectionnes:
-	#	print elt
-
-	#tab_rappel=[]
-	#tab_precision=[]
-	#for (rappel, precision) in  eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
-	#	tab_rappel.append(rappel)
-	#	tab_precision.append(precision)
-	#plt.plot(tab_rappel, tab_precision)
-	#plt.show()	
 
 	Liste_requests= [["personnes", "Intouchables"], ["lieu", "naissance", "Omar" ,"Sy"], ["personne", "récompensée", "Intouchables"],
 	["palmarès", "Globes" ,"de", "Cristal", "2012"],["membre", "jury", "Globes", "de" ,"Cristal" ,"2012"],
@@ -99,7 +93,9 @@ if __name__ == '__main__':
 			#print (elt)
 			tab_rappel.append(elt[0])
 			tab_precision.append(elt[1])
-		plt.plot(tab_rappel,tab_precision,ListeColor[ind])
+		x=[value for i,value in enumerate(tab_rappel) if i%7==0 ]
+		y=[value for i,value in enumerate(tab_precision) if i%7==0]
+		plt.plot(x,y,ListeColor[ind])
 		tab_rappel=[]
 		tab_precision=[]
 	plt.show()

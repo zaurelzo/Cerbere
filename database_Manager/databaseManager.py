@@ -103,6 +103,7 @@ class databaseManager:
 if __name__ == '__main__':
 	d1= databaseManager()
 	#d1.deleteTables()
+
 	# d1.createTables()
 	# d1.addElementsIndexTable(["madad"])
 	# d1.addElementsIndexTable(["bonjour"])

@@ -64,8 +64,9 @@ class parser:
 			word = word.lower()
 			if not self.isUrl(word):
 				list_clean_words = self.cleanWord(word)
+				#list_clean_words=[stemmer.stem(cword) for cword in list_of_words]
 				for clean_word in list_clean_words:
-					if not (clean_word in filter_stop_words_list):
+					if not (stemmer.stem(clean_word) in filter_stop_words_list):
 						filter_words.append(stemmer.stem(clean_word))
 
 		return filter_words
