@@ -15,5 +15,7 @@ sudo pip install stop-words
 # for stemming operation 
 sudo pip install nltk
 
+#plot
+sudo pip install matplotlib
 
-#dans qr1, il manque le fichier 26 ! (malparido)
+#La requete 5 n'est pas adapté
