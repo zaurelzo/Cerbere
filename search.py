@@ -54,6 +54,7 @@ class search:
 		#for elt in list_of_words_request:
 		#	print elt
 
+
 		#scoring all documents,
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
@@ -64,10 +65,15 @@ class search:
 					idWord = self.db.getIdByWord(keyword)
 					freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
 					nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
-					#IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
+					#if nb_doc_contenant_termes>0:
+					#	IDF = math.log(float(nb_doc_collection)/float(nb_doc_contenant_termes))
 					if freq!= -1:
 						sCourant= scoreNameDoc[idDoc][0]
+	#<<<<<<< HEAD
+	#						sCourant_avec_IDF=sCourant+(freq * IDF)
+	#=======
 						#sCourant_avec_IDF=sCourant+(freq * IDF)
+	#>>>>>>> ed90f6794413b247ef95ee35f4eb84d22af14c9c
 						sCourant_sans_IDF=sCourant+freq 
 						scoreNameDoc[idDoc]=(sCourant_sans_IDF,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
