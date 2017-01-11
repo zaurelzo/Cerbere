@@ -23,9 +23,15 @@ class search:
 		stop_words_french = get_stop_words('fr')
 		stop_words_french = [stemmer.stem(word.lower()) for word in stop_words_french]
 
+		list_keywords_split=[]
+
+		for word in list_keywords:
+			wordList = word.split()
+			for w in wordList:
+				list_keywords_split.append(w)
 		
 		list_of_words_request=[]
-		for word in list_keywords:
+		for word in list_keywords_split:
 			#print word
 			if isinstance(word,str):
 				word=word.decode("utf-8").lower()
@@ -48,7 +54,8 @@ class search:
 		#for elt in list_of_words_request:
 		#	print elt
 
-		#print len(scoreNameDoc)
+
+		#scoring all documents,
 		for idDoc in range(138):
 			indiceDoc=idDoc+1;
 			if indiceDoc != 127:
@@ -76,12 +83,12 @@ if __name__ == '__main__':
 	search_obj=search()
 	eval_obj= eval()
 
-	Liste_requests= [["personnes", "Intouchables"], ["lieu", "naissance", "Omar" ,"Sy"], ["personne", "récompensée", "Intouchables"],
-	["palmarès", "Globes" ,"de", "Cristal", "2012"],["membre", "jury", "Globes", "de" ,"Cristal" ,"2012"],
-	["prix", "Omar", "Sy", "Globes" ,"de" ,"Cristal", "2012"],["lieu", "Globes", "Cristal" ,"2012"],
-	["prix", "Omar" ,"Sy"],  ["acteur", "joué" ,"avec", "Omar" , "Sy"] ]
+	Liste_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
 
-	ListeColor=["b","g","r","c","m","y","k","b","g"]
+	ListeColor=["b","g","r","c","m","y","k","r","g"]
 	
 
 	tab_rappel=[]
@@ -120,14 +127,5 @@ if __name__ == '__main__':
 
 		tab_rappel=[]
 		tab_precision=[]
+		print ">>>>> Compute done for request :"+ str(ind+1)
 	plt.show()
-
-	
-
-
-
-
-
-
-
-		

@@ -16,8 +16,10 @@ if __name__ == '__main__':
 	myDatabaseManager=databaseManager()
 
 	if (DELETE_TABLES):
+		print ("delete tables...")
 		myDatabaseManager.deleteTables()
 	elif(CREATE_TABLE):
+		print "create tables..."
 		myDatabaseManager.createTables()
 	else:
 		start_time=time.clock()

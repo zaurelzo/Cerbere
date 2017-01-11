@@ -17,7 +17,7 @@ class databaseManager:
     	PRIMARY KEY(idIndex) \
 		);""")
 
-		print "--------------------------------------------------"
+		#print "--------------------------------------------------"
 
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS Documents(\
     	idDocuments int NOT NULL AUTO_INCREMENT, \
@@ -26,7 +26,7 @@ class databaseManager:
 		);""")
 
 
-		print "--------------------------------------------------"
+		#print "--------------------------------------------------"
 
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS IndexDocumentsCorrespondences(\
 		idIndex int NOT NULL, \
@@ -37,7 +37,7 @@ class databaseManager:
 		);""")
 
 
-		print "-------------------------------------------------- FIN"
+		#print "-------------------------------------------------- FIN"
 
 	def addElementsIndexTable(self,Listword):
 		try:
