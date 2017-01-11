@@ -94,9 +94,30 @@ if __name__ == '__main__':
 			#print (elt)
 			tab_rappel.append(elt[0])
 			tab_precision.append(elt[1])
-		x=[value for i,value in enumerate(tab_rappel) if i%7==0 ]
-		y=[value for i,value in enumerate(tab_precision) if i%7==0]
-		plt.plot(x,y,ListeColor[ind])
+
+			# limiter i à 5, 10, 25.
+		#x=[value for i,value in enumerate(tab_rappel) if i%7==0]
+		#y=[value for i,value in enumerate(tab_precision) if i%7==0]
+		#plt.plot(x,y,ListeColor[ind])
+
+		x5=[value for i,value in enumerate(tab_rappel) if i<5]
+		y5=[value for i,value in enumerate(tab_precision) if i<5]
+		plt.plot(x5,y5,ListeColor[ind])
+
+		print "valeurs des rappels pour la requête numéro"+str(ind)
+		for rappel in x5:
+			print "---------"+str(rappel)
+		print "valeurs des précision pour la requête numéro"+str(ind)
+		for rappel in y5:
+			print "---------"+str(rappel)
+		#x10=[value for i,value in enumerate(tab_rappel) if i<10]
+		#y10=[value for i,value in enumerate(tab_precision) if i<10]
+		#plt.plot(x10,y10,ListeColor[ind])
+
+		#x25=[value for i,value in enumerate(tab_rappel) if i<25]
+		#y25=[value for i,value in enumerate(tab_precision) if i<25]
+		#plt.plot(x25,y25,ListeColor[ind])
+
 		tab_rappel=[]
 		tab_precision=[]
 	plt.show()

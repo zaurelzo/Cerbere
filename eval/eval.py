@@ -25,11 +25,8 @@ class eval:
 	#calcule le nombre total de documents pertinents dans la liste renvoyée par la fonction précédente
 	def calculTotalPertinents(self, liste_poids_doc):
 		res = 0
-		cpt=0;
 		for elt in liste_poids_doc:
-			if cpt!=126:
-				res=res+elt[0]
-			cpt=cpt+1
+			res=res+elt[0]
 		return res
 
 	#Permet de retrouver dans la liste des documents pertinents un couple. On va rechercher dans la liste des documents pertinents un tuple
@@ -66,24 +63,27 @@ class eval:
 
 		rappel=0.0
 		precision=0.0
-
+		#print "---------------------"
 		for indice in range(len(liste_doc_selectionnes)):
 			#On parcourt l'ensemble de la liste des documents electionnés et la liste des documents pertinents
 			#Si un fichier est sélectionné (freq>0) et pertinent (poids=1) alors on calcule son rappel et sa précision
 			#On ajoute ensuite le tuple (rappel, précision) de ce document dans la liste liste_rappel_precision qui sera retournée
-			if list_Qrels_sort[indice][0]==1 and liste_doc_selectionnes[indice][0]>0:
+			
+			#if indice<5:
+			#	print list_Qrels_sort[indice]
+			if list_Qrels_sort[indice][0]==1:
+			 #and liste_doc_selectionnes[indice][0]>0:
 				
 				nb_pertinents_selectionnes=nb_pertinents_selectionnes+1
 				
-				rappel=float(nb_pertinents_selectionnes)/float(poids_tot_documents_pertinents)
+			rappel=float(nb_pertinents_selectionnes)/float(poids_tot_documents_pertinents)
 
-				#indice est utilisé comme nombre total de documents sélectionnés
-				precision = float(nb_pertinents_selectionnes)/float(indice+1)
-			#else:	
-			#	precision = float(nb_pertinents_selectionnes)/float(indice+1)
+			#indice est utilisé comme nombre total de documents sélectionnés
+			precision = float(nb_pertinents_selectionnes)/float(indice+1)
 			
 			liste_rappel_precision[indice]=(rappel, precision)			
 			
+			#print "nb_pertinents_selectionnes "+str(nb_pertinents_selectionnes)
 
 		return liste_rappel_precision
 
