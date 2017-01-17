@@ -43,5 +43,6 @@ class reformulationRequest:
 if __name__ == '__main__':
 	reform = reformulationRequest()
 
-	listKeywords=[["prix", "recompense"],["omar","caira"],["Abdi","AHamda"]]
-	print reform.reformulation2(listKeywords)
+	listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
+	for elt in reform.reformulation2(listKeywords):
+		print elt 
