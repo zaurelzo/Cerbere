@@ -98,7 +98,7 @@ class databaseManager:
 		if result is not None:
 			return result[0]
 		else:
-			return -1
+			return 0
 
 if __name__ == '__main__':
 	d1= databaseManager()
