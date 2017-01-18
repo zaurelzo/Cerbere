@@ -49,8 +49,7 @@ class search:
 		# by default, documents score are equal to zero
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
 		nb_doc_collection = 138;
-		#tab_avec_IDF = []
-		#tab_sans_IDF = []
+
 
 		#scoring all documents,
 		for idDoc in range(138):
@@ -103,6 +102,7 @@ class search:
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
+
 		for indtermScoreMethod,termScoreMethod in enumerate(listTermScoreMethod):
 			for indDocumentScoreMethode,documentScoreMethod in enumerate(listDocumentScoreMethod):
 
@@ -165,19 +165,19 @@ class search:
 					#Quelques valeurs à "ploter dans le graphe
 					toPlotRappel=[value for i,value in enumerate(tabAverageRappel[0]) if i%7==0 ]
 					toPlotPrecision=[value for i,value in enumerate(tabAveragePrecision[0]) if i%7==0]
+
 					plt.plot(toPlotRappel,toPlotPrecision,ListeColor[indDocumentScoreMethode+indtermScoreMethod-1],linewidth=1.5, linestyle="-",\
 					 label="Met "+ termScoreMethod + " " +str(documentScoreMethod ) )
 					plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
 
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + "| P@25 moy :"+ str(tabAveragePrecision[0][25])
-					print "===================================================="
+					print "==============================================================="
 					plt.ylabel('Precision moy')
 					plt.xlabel('Rappel moy')
 
 				tabAverageRappelPerMethod=[]
 				tabAveragePrecisionPerMethod=[]
-
 
 		#show graph
 		plt.show()
@@ -216,9 +216,3 @@ if __name__ == '__main__':
 	print listDocumentScoreMethod
 	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total)
 	print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"
-
-
-
-	
-	
-

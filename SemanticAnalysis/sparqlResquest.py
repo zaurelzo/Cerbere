@@ -9,7 +9,7 @@ class sparqlResquest:
 		pass
 
 	def searchSynonymous(self, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
 		query = """
 		    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
@@ -18,7 +18,6 @@ class sparqlResquest:
 		  ?subject rdfs:label ?label
 		}"""
   		
-		print query
 
   		sparql.setQuery(query)
 	
@@ -32,7 +31,7 @@ class sparqlResquest:
 		return listResults
 
 	def searchWithProperty(self, property, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
 
 
 if __name__ == '__main__':
