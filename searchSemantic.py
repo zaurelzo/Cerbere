@@ -6,19 +6,20 @@ from database_Manager.databaseManager import *
 from nltk.stem.snowball import FrenchStemmer
 #stop words 
 from stop_words import get_stop_words
-
 from eval.eval import * 
 
 import math
 import sys,os,time
 import numpy as np
 import matplotlib.pyplot as plt
+from SemanticAnalysis.reformulation import * 
 
 class search:
 	"""docstring for Search"""
 	def __init__(self):
 		self.db = databaseManager()
 		self.eval_obj= eval()
+		self.refObject = reformulationRequest()
 
 	#retourne liste ordonnée documents pertinents
 	def runSearch(self, list_keywords,termScoreMethod,documentScoreMethod):
@@ -60,7 +61,7 @@ class search:
 		scoreNameDoc.sort(key=lambda tup: tup[0])
 		return scoreNameDoc[::-1]
 
-
+	#retourne liste ordonnée documents pertinents
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 
 		#contains the score of each term
@@ -100,7 +101,7 @@ class search:
 			square_x= [term*term for term in termScoreVector ]
 			return sum(termScoreVector)/(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
 
-	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal):
+	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
 
@@ -113,6 +114,7 @@ class search:
 				for ind,req in enumerate(Liste_requests):
 					list_doc_pertinant= self.eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
 					#print "requete en cours " , req
+
 					list_doc_selectionnes=self.runSearch(req,termScoreMethod,documentScoreMethod)
 
 					#permet d'avoir un tableau de rappel et de précision
@@ -183,15 +185,52 @@ class search:
 		plt.show()
 
 
+	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType):
+		listDocumentSelectionnes=[]
+		if reformulationType=="ref1":
+			list_keywords_synonimous =self.refObject.reformulation1(Liste_requests)
+			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
+		else:
+			list_All_Combinaisons=self.reformulation2(Liste_requests)
+			list_All_documents_selections=[]
+			for listOneCombinaison in list_All_Combinaisons:
+				v=self.runSearch( listOneCombinaison,termScoreMethod,documentScoreMethod)
+				list_All_documents_selections.append(v)
+
+			#TODO : return  call heuristiqueSortDocuments  
+
+
+	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
+	#de renvoyer une liste résultat (qui correspond à la liste des docs selectionnée) 
+	def heuristiqueSortDocuments(self,sortMethod,list_All_documents_selections):
+		if sortMethod=="sum":
+			for 
+
+
+
 if __name__ == '__main__':
 	listTermScoreMethod=[]
 	listDocumentScoreMethod=[]
 	per_Query_or_total=""
-
-	if len(sys.argv) != 4:
-		print "[Usage] python search.py <TF|TF_IDF> <1|2|3|4> <perQuery|total>"
+	reformulationType=""
+	sortMethod=""
+	if len(sys.argv) != 5:
+		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> <ref1(list syn)|ref2 (combinaisons)> <sum|max>"
 		sys.exit(1)
 	else:
+
+		if sys.argv[5]=="sum" or sys.argv[5]="max":
+			sortMethod=sys.argv[5]
+		else:
+			print ("5th paramater is wrong")
+			sys.exit(1) 
+
+		if sys.argv[4]=="ref1" or sys.argv[4]="ref2":
+			reformulationType=sys.argv[4]
+		else:
+			print ("4th paramater is wrong")
+			sys.exit(1)
+
 		per_Query_or_total=sys.argv[3]
 		#print "arguement 3 ", sys.argv[3]
 		if sys.argv[3]=="perQuery":
