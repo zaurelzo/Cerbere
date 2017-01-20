@@ -15,11 +15,26 @@ class reformulationRequest:
 		finalListSynonymous = []
 		for keyword in listKeyWords:
 			listSynonymous = self.sparpqlObject.searchSynonymous(keyword)
-			for synonymous in listSynonymous:
-				#print synonymous
-				finalListSynonymous.append(synonymous)
-		return finalListSynonymous
+			finalListSynonymous=finalListSynonymous+listSynonymous
 
+		#tranforme tous les synonymes en unicode
+		ListfinalListSynonymous=[]
+		for word in finalListSynonymous:
+			if isinstance(word,str):
+				word=word.decode("utf-8")
+			ListfinalListSynonymous.append(word)
+
+		#tranforme tous les mots de la requête en unicode
+		finalListKeyWord=[]
+		for keyword in  listKeyWords:
+			if isinstance(keyword,str):
+				keyword=keyword.decode("utf-8")
+			finalListKeyWord.append(keyword)
+
+		for keyword in  finalListKeyWord:
+			if not(keyword in ListfinalListSynonymous):
+				ListfinalListSynonymous.append(keyword)
+		return ListfinalListSynonymous
 
 	#reformulation par combinaison des synonymes et des mots-clés
 	#Attention,si les mots de la requête n'apparaissent pas dans la liste listOfListofSynonimous
@@ -30,12 +45,26 @@ class reformulationRequest:
 		for keyword in listKeyWords:
 			listOfListofSynonimous.append(self.sparpqlObject.searchSynonymous(keyword))
 
-		#on rajoute les mots de la requête s'ils n'y sont pas 
-		for index,keyword in enumerate(listKeyWords):
-			if not (keyword in listOfListofSynonimous[index]):
-				listOfListofSynonimous[index].append(keyword)
+		#transforme toutes les combinaisons en unicode
+		FinalListOfListofSynonimous=[[] for subList in listOfListofSynonimous ]
+		for index,subList in enumerate(listOfListofSynonimous):
+			for w in subList:
+				if isinstance(w,str):
+					w=w.decode("utf-8")
+				FinalListOfListofSynonimous[index].append(w)
+		
+		finalListKeyWord=[]
+		for keyword in  listKeyWords:
+			if isinstance(keyword,str):
+				keyword=keyword.decode("utf-8")
+			finalListKeyWord.append(keyword)
 
-		return self.createAllCombinaision(listOfListofSynonimous)
+		#on rajoute les mots de la requête s'ils n'y sont pas 
+		for index,keyword in enumerate(finalListKeyWord):
+			if not (keyword in FinalListOfListofSynonimous[index]):
+				FinalListOfListofSynonimous[index].append(keyword)
+
+		return self.createAllCombinaision(FinalListOfListofSynonimous)
 
 	
 	def createAllCombinaision(self,listOfListofSynonimous):		

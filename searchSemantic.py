@@ -69,7 +69,6 @@ class search:
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 		#contains the score of each term
 		termScoreVector=[]
-
 		#compute freq vector or IDF vector
 		for keyword in list_of_words_request:
 			freq=0
@@ -90,6 +89,7 @@ class search:
 		
 		#security
 		if (termScoreVector==[]):
+			print "=====================",list_of_words_request
 			raise NameError("query terms are not in the database")
 		
 		#produit scalaire
@@ -311,15 +311,15 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	# List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	# [ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
-	List_requests= [["personnes", "Intouchables"]]
+	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
 
 	search_obj=search()
 	start_time=time.clock()
 	#print listTermScoreMethod
-	print listDocumentScoreMethod
+	#print listDocumentScoreMethod
 	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total,sortMethod,reformulationType)
 	print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"
