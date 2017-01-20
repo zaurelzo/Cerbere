@@ -9,8 +9,7 @@ class eval:
 
 	#Renvoi la liste des documents pertinents pour un fichier txt d'une requête
 	def readFileQrels(self, chemin_fichier):
-		file = open(chemin_fichier, "r+")
- 
+		file = open(chemin_fichier, "r+") 
 		res= []
 		indice=0
 		#On récupère chaque ligne des fichiers txt
@@ -22,12 +21,14 @@ class eval:
 		return res
 		#On renvoi le tableau à 2 colonnes : poids|nom document 
 
+
 	#calcule le nombre total de documents pertinents dans la liste renvoyée par la fonction précédente
 	def calculTotalPertinents(self, liste_poids_doc):
 		res = 0
 		for elt in liste_poids_doc:
 			res=res+elt[0]
 		return res
+
 
 	#Permet de retrouver dans la liste des documents pertinents un couple. On va rechercher dans la liste des documents pertinents un tuple
 	#ayant pour second élément le même que celui de tuple_elt (ce second élément est le nom du fichier).
@@ -38,8 +39,7 @@ class eval:
 				return liste_doc_pertinents[ind]
 
 
-	def calculRappelAndPrecision(self,liste_doc_pertinents, liste_doc_selectionnes):
-		
+	def calculRappelAndPrecision(self,liste_doc_pertinents, liste_doc_selectionnes):	
 		list_Qrels_sort=[]
 
 		#on crée la nouvelle liste à partir des docs selectionnés, on trier la liste des documents pertinents selon 
@@ -86,6 +86,7 @@ class eval:
 			#print "nb_pertinents_selectionnes "+str(nb_pertinents_selectionnes)
 
 		return liste_rappel_precision
+
 
 if __name__ == '__main__':
 	o1=eval()

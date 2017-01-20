@@ -16,12 +16,9 @@ class sparqlResquest:
 		WHERE {
 		  ?subject rdfs:label \"""" + word +"""\"@fr.
 		  ?subject rdfs:label ?label
-		}"""
-  		
+		}"""  		
 
   		sparql.setQuery(query)
-	
-
 		sparql.setReturnFormat(JSON)
 		results = sparql.query().convert()
 
@@ -29,6 +26,7 @@ class sparqlResquest:
 		for result in results["results"]["bindings"]:
 			listResults.append(result["label"]["value"])
 		return listResults
+
 
 	def searchWithProperty(self, property, word):
 		sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")

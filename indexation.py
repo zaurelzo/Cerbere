@@ -23,13 +23,12 @@ if __name__ == '__main__':
 		myDatabaseManager.createTables()
 	else:
 		start_time=time.clock()
-
 		#words to add in the database (to not have duplicates words)
 		addWordsList=[]
-
 		#List wchich contains parsing list result for each file
 		list_Of_Result_ParsingDocument=[]
 		List_Title_Documents=[]
+
 		for num in range (139):
 			#pas de fichier commençant avec le numéro 0 et 127
 			if num !=0 and num!=127:
@@ -53,17 +52,15 @@ if __name__ == '__main__':
 		#	print "===> " +  word
 		print ">>>>>>> Number of words :" + str(len(addWordsList))
 
-
 		#create a global dict of  where key is(idWord,idDoc) and value is freq 
 		globalDictWithFrequencies={}
 		for idDoc ,subList in enumerate(list_Of_Result_ParsingDocument):
-			print "traitment doc : " + str(idDoc)
+			print "traitment doc : " + str(idDoc+1)
 			dicSubList=Counter(subList)
 
 			for word,freq in dicSubList.iteritems():
 				idWord=addWordsList.index(word)
-				globalDictWithFrequencies[(idWord+1,idDoc+1)]=freq
-		
+				globalDictWithFrequencies[(idWord+1,idDoc+1)]=freq		
 		print ">>>>>>> length global dic : " + str(len(globalDictWithFrequencies))
 
 		print ">>>>>>> adding block of elements in the database"
@@ -71,5 +68,4 @@ if __name__ == '__main__':
 		myDatabaseManager.addElementDocumentsTable(List_Title_Documents)
 		myDatabaseManager.addElementsIndexTable(addWordsList)
 		myDatabaseManager.addElementIndexDocumentsCorrespondences(globalDictWithFrequencies)
-
 		print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"

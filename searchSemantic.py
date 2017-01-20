@@ -16,10 +16,12 @@ from SemanticAnalysis.reformulation import *
 
 class search:
 	"""docstring for Search"""
+
 	def __init__(self):
 		self.db = databaseManager()
 		self.eval_obj= eval()
 		self.refObject = reformulationRequest()
+
 
 	#retourne liste ordonnée documents pertinents
 	def runSearch(self, list_keywords,termScoreMethod,documentScoreMethod):
@@ -52,7 +54,6 @@ class search:
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
 		nb_doc_collection = 138;
 
-
 		#scoring all documents,
 		for idDoc in range(138):
 			if idDoc+1 != 127:
@@ -60,6 +61,8 @@ class search:
 				scoreNameDoc[idDoc]=(score,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
 		return scoreNameDoc[::-1]
+
+
 
 	#retourne liste ordonnée documents pertinents
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
@@ -101,13 +104,15 @@ class search:
 			square_x= [term*term for term in termScoreVector ]
 			return sum(termScoreVector)/(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
 
+
+
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
 
 		for indtermScoreMethod,termScoreMethod in enumerate(listTermScoreMethod):
 			for indDocumentScoreMethode,documentScoreMethod in enumerate(listDocumentScoreMethod):
-
+				
 				tab_rappel=[]
 				tab_precision=[]
 				ListeColor=["b","g","r","c","m","y","k","r","g"]
@@ -185,6 +190,8 @@ class search:
 		plt.show()
 
 
+
+
 	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType):
 		listDocumentSelectionnes=[]
 		if reformulationType=="ref1":
@@ -200,11 +207,14 @@ class search:
 			#TODO : return  call heuristiqueSortDocuments  
 
 
+
+
 	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
 	#de renvoyer une liste résultat (qui correspond à la liste des docs selectionnée) 
 	def heuristiqueSortDocuments(self,sortMethod,list_All_documents_selections):
 		if sortMethod=="sum":
 			for 
+
 
 
 

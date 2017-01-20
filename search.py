@@ -16,9 +16,11 @@ import matplotlib.pyplot as plt
 
 class search:
 	"""docstring for Search"""
+
 	def __init__(self):
 		self.db = databaseManager()
 		self.eval_obj= eval()
+
 
 	#retourne liste ordonnée documents pertinents
 	def runSearch(self, list_keywords,termScoreMethod,documentScoreMethod):
@@ -27,7 +29,6 @@ class search:
 		stop_words_french = [stemmer.stem(word.lower()) for word in stop_words_french]
 
 		list_keywords_split=[]
-
 		for word in list_keywords:
 			wordList = word.split()
 			for w in wordList:
@@ -46,11 +47,9 @@ class search:
 		#for elt in list_of_words_request:
 		#	print elt
 
-
 		# by default, documents score are equal to zero
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
 		nb_doc_collection = 138;
-
 
 		#scoring all documents,
 		for idDoc in range(138):
@@ -61,8 +60,8 @@ class search:
 		return scoreNameDoc[::-1]
 
 
-	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 
+	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 		#contains the score of each term
 		termScoreVector=[]
 
@@ -100,24 +99,24 @@ class search:
 			square_x= [term*term for term in termScoreVector ]
 			return sum(termScoreVector)/(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
 
+
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
 
 		for indtermScoreMethod,termScoreMethod in enumerate(listTermScoreMethod):
 			for indDocumentScoreMethode,documentScoreMethod in enumerate(listDocumentScoreMethod):
-
 				tab_rappel=[]
 				tab_precision=[]
 				ListeColor=["b","g","r","c","m","y","k","r","g"]
+
 				for ind,req in enumerate(Liste_requests):
 					list_doc_pertinant= self.eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
 					#print "requete en cours " , req
 					list_doc_selectionnes=self.runSearch(req,termScoreMethod,documentScoreMethod)
 
 					#permet d'avoir un tableau de rappel et de précision
-					for elt in  self.eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
-						
+					for elt in  self.eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):						
 						tab_rappel.append(elt[0])
 						tab_precision.append(elt[1])
 
@@ -210,6 +209,8 @@ if __name__ == '__main__':
 	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
 	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
 	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+
+	#List_requests= [["personnes", "Intouchables"]]
 
 	search_obj=search()
 	start_time=time.clock()

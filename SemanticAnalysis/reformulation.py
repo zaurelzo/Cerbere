@@ -30,8 +30,7 @@ class reformulationRequest:
 		return self.createAllCombinaision(listOfListofSynonimous)
 
 	
-	def createAllCombinaision(self,listOfListofSynonimous):
-		
+	def createAllCombinaision(self,listOfListofSynonimous):		
 		listResultOfRequest=[]
 		if len(listOfListofSynonimous)==0:
 			return []

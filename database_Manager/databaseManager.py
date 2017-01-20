@@ -17,16 +17,11 @@ class databaseManager:
     	PRIMARY KEY(idIndex) \
 		);""")
 
-		#print "--------------------------------------------------"
-
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS Documents(\
     	idDocuments int NOT NULL AUTO_INCREMENT, \
     	title varchar(250) NOT NULL, \
     	PRIMARY KEY(idDocuments) \
 		);""")
-
-
-		#print "--------------------------------------------------"
 
 		self.cursor.execute(""" CREATE TABLE IF NOT EXISTS IndexDocumentsCorrespondences(\
 		idIndex int NOT NULL, \
@@ -37,7 +32,6 @@ class databaseManager:
 		);""")
 
 
-		#print "-------------------------------------------------- FIN"
 
 	def addElementsIndexTable(self,Listword):
 		try:
@@ -70,10 +64,12 @@ class databaseManager:
 			print("ERROR WHEN ADD ELEMENT IN IndexDocumentsCorrespondences")
 			self.conn.rollback()
 
+
 	def deleteTables(self):
 		self.cursor.execute(""" DROP TABLE IndexDocumentsCorrespondences ;""")
 		self.cursor.execute(""" DROP TABLE IndexTable ;""")
 		self.cursor.execute(""" DROP TABLE Documents ;""")
+
 
 	def getIdByWord(self, word):
 		self.cursor.execute("""SELECT idIndex FROM IndexTable WHERE word = '%s'""" % (word))
@@ -91,6 +87,7 @@ class databaseManager:
 			return result[0]
 		else:
 			return -1
+
 
 	def countNbAppareancesWord(self, idWord):
 		self.cursor.execute("""SELECT COUNT(idIndex) FROM IndexDocumentsCorrespondences WHERE idIndex ='%s'""" % (str(idWord)))
