@@ -42,7 +42,7 @@ class search:
 			else:
 				word=word.lower()
 
-			if (word in stop_words_french)==False:
+			if (stemmer.stem(word) in stop_words_french)==False:
 				list_of_words_request.append(stemmer.stem(word))
 		#for elt in list_of_words_request:
 		#	print elt
@@ -57,6 +57,7 @@ class search:
 				score= self.computeDocumentScore(idDoc+1,list_of_words_request,termScoreMethod,documentScoreMethod)
 				scoreNameDoc[idDoc]=(score,scoreNameDoc[idDoc][1])
 		scoreNameDoc.sort(key=lambda tup: tup[0])
+		#print scoreNameDoc[::-1]
 		return scoreNameDoc[::-1]
 
 
@@ -67,8 +68,12 @@ class search:
 
 		#compute freq vector or IDF vector
 		for keyword in list_of_words_request:
+			freq=0
 			idWord = self.db.getIdByWord(keyword)
-			freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
+			if idWord!=-1:
+				freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
+			#else:#debug
+			#	print "------------------idWord vaut -1 pour le mot ", keyword
 			
 			if termScoreMethod=="TF":
 				termScoreVector.append(freq)
@@ -89,15 +94,27 @@ class search:
 		#coef de dice
 		elif documentScoreMethod==2:
 			square_x= [term*term for term in termScoreVector ]
-			return 2*sum(termScoreVector)/(sum(square_x)+len(list_of_words_request))
+			div=(sum(square_x)+len(list_of_words_request))
+			if div==0:
+				return 0
+			else:
+				return 2*sum(termScoreVector)/div
 		#mesure du cosinus
 		elif documentScoreMethod==3:
-			square_x= [term*term for term in termScoreVector ]
-			return sum(termScoreVector)/(sum(square_x)*len(list_of_words_request))
+			square_x= [term*term for term in termScoreVector]
+			div=(sum(square_x)*len(list_of_words_request))
+			if div==0:
+				return 0
+			else:
+				return sum(termScoreVector)/div
 		#mesure du jaccard
 		elif documentScoreMethod==4:
 			square_x= [term*term for term in termScoreVector ]
-			return sum(termScoreVector)/(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
+			div=(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
+			if div==0:
+				return 0
+			else:
+				return sum(termScoreVector)/div
 
 
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal):
@@ -128,7 +145,8 @@ class search:
 						plt.ylabel('Precision')
 						plt.xlabel('Rappel')
 						print ">>>>>>> Compute done for request "+ str(ind+1) + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25])
+						averP=float((tab_precision[5])+float(tab_precision[10])+float(tab_precision[25]))/float(3)
+						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25]) +" (P@5+P@10+P@25)/3:"+averP
 						print "===================================================="
 					else:
 							tabAveragePrecisionPerMethod.append(tab_precision)
@@ -205,12 +223,12 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+	# List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	# [ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
 
-	#List_requests= [["personnes", "Intouchables"]]
+	List_requests= [ ["personne récompensée", "Intouchables"]]
 
 	search_obj=search()
 	start_time=time.clock()

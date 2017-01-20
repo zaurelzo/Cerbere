@@ -86,7 +86,7 @@ class databaseManager:
 		if result is not None:
 			return result[0]
 		else:
-			return -1
+			return 0
 
 
 	def countNbAppareancesWord(self, idWord):

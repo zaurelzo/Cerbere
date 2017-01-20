@@ -22,11 +22,19 @@ class reformulationRequest:
 
 
 	#reformulation par combinaison des synonymes et des mots-clés
+	#Attention,si les mots de la requête n'apparaissent pas dans la liste listOfListofSynonimous
+	#après avoir éffectuée la requête, on les rajoutes. Ceci est la cas si les mots de la req 
+	#n'appartiennent pas à la base de connaissances.
 	def reformulation2(self,listKeyWords):
 		listOfListofSynonimous=[]
-
 		for keyword in listKeyWords:
 			listOfListofSynonimous.append(self.sparpqlObject.searchSynonymous(keyword))
+
+		#on rajoute les mots de la requête s'ils n'y sont pas 
+		for index,keyword in enumerate(listKeyWords):
+			if not (keyword in listOfListofSynonimous[index]):
+				listOfListofSynonimous[index].append(keyword)
+
 		return self.createAllCombinaision(listOfListofSynonimous)
 
 	
@@ -35,10 +43,9 @@ class reformulationRequest:
 		if len(listOfListofSynonimous)==0:
 			return []
 		elif len(listOfListofSynonimous)==1:
-			subListResult=[]
 			for word in listOfListofSynonimous[0]:
-				subListResult.append([word])
-			return subListResult
+				listResultOfRequest.append([word])
+			return listResultOfRequest
 		else:
 			for word in listOfListofSynonimous[0]:
 				for i in self.createAllCombinaision(listOfListofSynonimous[1:]):
@@ -49,5 +56,5 @@ if __name__ == '__main__':
 	reform = reformulationRequest()
 
 	#listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
-	for elt in reform.reformulation2(["personnes","Intouchables"]):
+	for elt in reform.reformulation2(["personnes", "Intouchables"]):
 		print elt 

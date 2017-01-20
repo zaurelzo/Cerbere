@@ -20,7 +20,7 @@ class search:
 	def __init__(self):
 		self.db = databaseManager()
 		self.eval_obj= eval()
-		self.refObject = reformulationRequest()
+		self.reformulationObject = reformulationRequest()
 
 
 	#retourne liste ordonnée documents pertinents
@@ -43,11 +43,12 @@ class search:
 				word=word.decode("utf-8").lower()
 			else:
 				word=word.lower()
-
+			#print "*************",stemmer.stem(word)
 			if (word in stop_words_french)==False:
 				list_of_words_request.append(stemmer.stem(word))
-		#for elt in list_of_words_request:
-		#	print elt
+		
+		#for elt in stop_words_french:
+		#	print "******************",elt
 
 
 		# by default, documents score are equal to zero
@@ -66,14 +67,17 @@ class search:
 
 	#retourne liste ordonnée documents pertinents
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
-
 		#contains the score of each term
 		termScoreVector=[]
 
 		#compute freq vector or IDF vector
 		for keyword in list_of_words_request:
+			freq=0
 			idWord = self.db.getIdByWord(keyword)
-			freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
+			if idWord!=-1:
+				freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
+			#else:#debug
+			#	print "------------------idWord vaut -1 pour le mot ", keyword
 			
 			if termScoreMethod=="TF":
 				termScoreVector.append(freq)
@@ -94,25 +98,36 @@ class search:
 		#coef de dice
 		elif documentScoreMethod==2:
 			square_x= [term*term for term in termScoreVector ]
-			return 2*sum(termScoreVector)/(sum(square_x)+len(list_of_words_request))
+			div=(sum(square_x)+len(list_of_words_request))
+			if div==0:
+				return 0
+			else:
+				return 2*sum(termScoreVector)/div
 		#mesure du cosinus
 		elif documentScoreMethod==3:
-			square_x= [term*term for term in termScoreVector ]
-			return sum(termScoreVector)/(sum(square_x)*len(list_of_words_request))
+			square_x= [term*term for term in termScoreVector]
+			div=(sum(square_x)*len(list_of_words_request))
+			if div==0:
+				return 0
+			else:
+				return sum(termScoreVector)/div
 		#mesure du jaccard
 		elif documentScoreMethod==4:
 			square_x= [term*term for term in termScoreVector ]
-			return sum(termScoreVector)/(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
+			div=(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
+			if div==0:
+				return 0
+			else:
+				return sum(termScoreVector)/div
 
 
-
-	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod):
+	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
 
 		for indtermScoreMethod,termScoreMethod in enumerate(listTermScoreMethod):
 			for indDocumentScoreMethode,documentScoreMethod in enumerate(listDocumentScoreMethod):
-				
+
 				tab_rappel=[]
 				tab_precision=[]
 				ListeColor=["b","g","r","c","m","y","k","r","g"]
@@ -120,7 +135,10 @@ class search:
 					list_doc_pertinant= self.eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
 					#print "requete en cours " , req
 
-					list_doc_selectionnes=self.runSearch(req,termScoreMethod,documentScoreMethod)
+					#DONE : au lieu d'appeler runSearch, on appel notre superbe fonction qui se charge de faire de la 
+					#reformulation.
+					list_doc_selectionnes=self.preTreatementforSemanticSearch(sortMethod,req,termScoreMethod,\
+						documentScoreMethod,reformulationType)
 
 					#permet d'avoir un tableau de rappel et de précision
 					for elt in  self.eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
@@ -133,10 +151,11 @@ class search:
 						x=[value for i,value in enumerate(tab_rappel) if i%7==0]
 						y=[value for i,value in enumerate(tab_precision) if i%7==0]
 						plt.plot(x,y,ListeColor[ind])
-						plt.ylabel('Precision')
-						plt.xlabel('Rappel')
+						plt.ylabel('Precision (semantic)')
+						plt.xlabel('Rappel (semantic)')
 						print ">>>>>>> Compute done for request "+ str(ind+1) + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25])
+						averP=float((tab_precision[5])+float(tab_precision[10])+float(tab_precision[25]))/float(3)
+						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25]) + " (P@5+P@10+P@25)/3:"+averP
 						print "===================================================="
 					else:
 							tabAveragePrecisionPerMethod.append(tab_precision)
@@ -181,8 +200,8 @@ class search:
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + "| P@25 moy :"+ str(tabAveragePrecision[0][25])
 					print "==============================================================="
-					plt.ylabel('Precision moy')
-					plt.xlabel('Rappel moy')
+					plt.ylabel('Precision moy(semantic)')
+					plt.xlabel('Rappel moy(semantic)')
 
 				tabAverageRappelPerMethod=[]
 				tabAveragePrecisionPerMethod=[]
@@ -191,30 +210,56 @@ class search:
 
 
 
-
 	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType):
 		listDocumentSelectionnes=[]
 		if reformulationType=="ref1":
-			list_keywords_synonimous =self.refObject.reformulation1(Liste_requests)
-			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
-		else:
-			list_All_Combinaisons=self.reformulation2(Liste_requests)
+			#print "===========ref1"
+			list_keywords_synonimous =self.reformulationObject.reformulation1(Liste_requests)
+			#print list_keywords_synonimous
+			v= self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
+			#print v
+			return v
+		elif reformulationType=="ref2":
+			list_All_Combinaisons=self.reformulationObject.reformulation2(Liste_requests)
 			list_All_documents_selections=[]
 			for listOneCombinaison in list_All_Combinaisons:
 				v=self.runSearch( listOneCombinaison,termScoreMethod,documentScoreMethod)
+				#on trie les documents en fonction de leur nom
+				v.sort(key=lambda tup: tup[1])
 				list_All_documents_selections.append(v)
-
-			#TODO : return  call heuristiqueSortDocuments  
-
+			return self.heuristiqueSortDocuments(sortMethod,list_All_documents_selections)  
 
 
 
 	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
 	#de renvoyer une liste résultat (qui correspond à la liste des docs selectionnée) 
 	def heuristiqueSortDocuments(self,sortMethod,list_All_documents_selections):
+		#on va contruire une liste qui ne contient que des "np array" des scores pour chaque liste de 
+		#list_All_documents_selections
+		ListVectorScoresubListSynonimous=[ [] for nbElt in range(len(list_All_documents_selections)) ]
+		for index, subList in enumerate(list_All_documents_selections):
+			for score,nameDoc in subList:
+				ListVectorScoresubListSynonimous[index].append(float(score)) 
+		
+		#on transfore les listes remplies ci-dessus en np array et on construit la liste résultat 
+		#en fonction de si on fait une somme ou si on cherche le max
 		if sortMethod=="sum":
-			for 
-
+			finalListResult=[]
+			for index,subList in enumerate(ListVectorScoresubListSynonimous):
+				if index==0:
+					finalListResult.append(np.array(subList))
+				else:
+					finalListResult[0]=finalListResult[0]+np.array(subList)
+			finalListResult[0]=finalListResult[0]/float(len(list_All_documents_selections))
+			
+			#on réassocie à chaque document à son nouveau score et retourne cette nouvelle liste triée par score décroissant
+			#haha :) , cet écriture de merde "[0][i][1]", [0] première liste de list_All_documents_selections
+			#[i], on accède au i ème élément de la liste récupérée avec [0]
+			#[1] enfin on récupère le nom du document
+			finalListResult[0]= [ (score,list_All_documents_selections[0][i][1]) for i,score in enumerate(finalListResult[0])]
+			finalListResult[0].sort(key=lambda tup: tup[0])
+			#print finalListResult[0][::-1]
+			return finalListResult[0][::-1]
 
 
 
@@ -224,18 +269,18 @@ if __name__ == '__main__':
 	per_Query_or_total=""
 	reformulationType=""
 	sortMethod=""
-	if len(sys.argv) != 5:
+	if len(sys.argv) != 6:
 		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> <ref1(list syn)|ref2 (combinaisons)> <sum|max>"
 		sys.exit(1)
 	else:
 
-		if sys.argv[5]=="sum" or sys.argv[5]="max":
+		if sys.argv[5]=="sum" or sys.argv[5]=="max":
 			sortMethod=sys.argv[5]
 		else:
 			print ("5th paramater is wrong")
 			sys.exit(1) 
 
-		if sys.argv[4]=="ref1" or sys.argv[4]="ref2":
+		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2":
 			reformulationType=sys.argv[4]
 		else:
 			print ("4th paramater is wrong")
@@ -255,14 +300,15 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+	# List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	# [ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+	List_requests= [["personnes", "Intouchables"]]
 
 	search_obj=search()
 	start_time=time.clock()
 	#print listTermScoreMethod
 	print listDocumentScoreMethod
-	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total)
+	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total,sortMethod,reformulationType)
 	print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"
