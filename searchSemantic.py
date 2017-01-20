@@ -31,13 +31,17 @@ class search:
 
 		list_keywords_split=[]
 
-		for word in list_keywords:
+		for word,coef in list_keywords:
 			wordList = word.split()
 			for w in wordList:
-				list_keywords_split.append(w)
+				#on redivise le coef, par le nombre de mots trouvé en splitant.
+				#Comme ça on re répartie le "coef" sur les nouveaux mots
+				newCoef=float(coef)/float(len(wordList))
+				list_keywords_split.append((w,newCoef))
 		
+
 		list_of_words_request=[]
-		for word in list_keywords_split:
+		for word,coef in list_keywords_split:
 			#print word
 			if isinstance(word,str):
 				word=word.decode("utf-8").lower()
@@ -45,7 +49,7 @@ class search:
 				word=word.lower()
 			#print "*************",stemmer.stem(word)
 			if (word in stop_words_french)==False:
-				list_of_words_request.append(stemmer.stem(word))
+				list_of_words_request.append((stemmer.stem(word),coef))
 		
 		#for elt in stop_words_french:
 		#	print "******************",elt
@@ -70,7 +74,7 @@ class search:
 		#contains the score of each term
 		termScoreVector=[]
 		#compute freq vector or IDF vector
-		for keyword in list_of_words_request:
+		for keyword,coef in list_of_words_request:
 			freq=0
 			idWord = self.db.getIdByWord(keyword)
 			if idWord!=-1:
@@ -79,13 +83,13 @@ class search:
 			#	print "------------------idWord vaut -1 pour le mot ", keyword
 			
 			if termScoreMethod=="TF":
-				termScoreVector.append(freq)
+				termScoreVector.append(freq*coef)
 			elif termScoreMethod=="TF_IDF":
 				nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 				IDF=0
 				if nb_doc_contenant_termes>0:
 					IDF = math.log(float(138)/float(nb_doc_contenant_termes))
-				termScoreVector.append(IDF*freq)
+				termScoreVector.append(IDF*freq*coef)
 		
 		#security
 		if (termScoreVector==[]):
@@ -215,12 +219,9 @@ class search:
 	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType):
 		listDocumentSelectionnes=[]
 		if reformulationType=="ref1":
-			#print "===========ref1"
 			list_keywords_synonimous =self.reformulationObject.reformulation1(Liste_requests)
-			#print list_keywords_synonimous
-			v= self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
-			#print v
-			return v
+			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
+			
 		elif reformulationType=="ref2":
 			list_All_Combinaisons=self.reformulationObject.reformulation2(Liste_requests)
 			list_All_documents_selections=[]
@@ -229,8 +230,11 @@ class search:
 				#on trie les documents en fonction de leur nom
 				v.sort(key=lambda tup: tup[1])
 				list_All_documents_selections.append(v)
-			return self.heuristiqueSortDocuments(sortMethod,list_All_documents_selections)  
+			return self.heuristiqueSortDocuments(sortMethod,list_All_documents_selections)
 
+		elif reformulationType=="ref3":
+			list_keywords_synonimous =self.reformulationObject.reformulation3(Liste_requests)
+			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
 
 
 	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
@@ -281,7 +285,8 @@ if __name__ == '__main__':
 	reformulationType=""
 	sortMethod=""
 	if len(sys.argv) != 6:
-		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> <ref1(list syn)|ref2 (combinaisons)> <sum|max>"
+		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> \
+		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) > <sum|max>"
 		sys.exit(1)
 	else:
 
@@ -291,7 +296,7 @@ if __name__ == '__main__':
 			print ("5th paramater is wrong")
 			sys.exit(1) 
 
-		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2":
+		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2" or sys.argv[4]=="ref3":
 			reformulationType=sys.argv[4]
 		else:
 			print ("4th paramater is wrong")

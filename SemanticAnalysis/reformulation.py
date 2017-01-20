@@ -11,30 +11,26 @@ class reformulationRequest:
 
 	#reformulation par ajout des synonymes des mots-clés sans affecter de poids
 	def reformulation1(self, listKeyWords):
-		listSynonymous = []
+		#on contruit la liste résultat avec les coefs
 		finalListSynonymous = []
 		for keyword in listKeyWords:
 			listSynonymous = self.sparpqlObject.searchSynonymous(keyword)
-			finalListSynonymous=finalListSynonymous+[ (w,1) for w in listSynonymous]
+			
+			#transforme listSynonimous en unicode
+			listSynonymousUnicode=[]
+			for wo in listSynonymous:
+				if isinstance(wo,str):
+					wo=wo.decode("utf-8")
+				listSynonymousUnicode.append(wo)
+			
+			if not (keyword.decode("utf-8") in listSynonymousUnicode):
+				listSynonymousUnicode.append(keyword.decode("utf-8"))
 
-		#tranforme tous les synonymes en unicode
-		ListfinalListSynonymous=[]
-		for word in finalListSynonymous:
-			if isinstance(word,str):
-				word=word.decode("utf-8")
-			ListfinalListSynonymous.append(word)
+			newCoef=float(1)
+			#on construit la liste des résultats avec les coeffs 
+			finalListSynonymous=finalListSynonymous+[ (w,newCoef) for w in listSynonymousUnicode]
 
-		#tranforme tous les mots de la requête en unicode
-		finalListKeyWord=[]
-		for keyword in  listKeyWords:
-			if isinstance(keyword,str):
-				keyword=keyword.decode("utf-8")
-			finalListKeyWord.append(keyword)
-
-		for keyword in  finalListKeyWord:
-			if self.tupleBelong((keyword,1) , ListfinalListSynonymous)==False:
-				ListfinalListSynonymous.append((keyword,1))
-		return ListfinalListSynonymous
+		return finalListSynonymous
 
 	#reformulation par combinaison des synonymes et des mots-clés
 	#Attention,si les mots de la requête n'apparaissent pas dans la liste listOfListofSynonimous
@@ -86,36 +82,36 @@ class reformulationRequest:
 					listResultOfRequest.append([word]+i)
 			return listResultOfRequest
 
+
+
 	#reformulation par ajout des synonymes des mots-clés avec affection des poids affecter de poids
-	# def reformulation3(self, listKeyWords):
-	# 	listSynonymous = []
-	# 	finalListSynonymous = []
-	# 	for keyword in listKeyWords:
-	# 		listSynonymous = self.sparpqlObject.searchSynonymous(keyword)
-	# 		finalListSynonymous=finalListSynonymous+[ (w,1) for w in listSynonymous]
+	def reformulation3(self, listKeyWords):
+		#on contruit la liste résultat avec les coefs
+		finalListSynonymous = []
+		for keyword in listKeyWords:
+			listSynonymous = self.sparpqlObject.searchSynonymous(keyword)
+			
+			#transforme listSynonimous en unicode
+			listSynonymousUnicode=[]
+			for wo in listSynonymous:
+				if isinstance(wo,str):
+					wo=wo.decode("utf-8")
+				listSynonymousUnicode.append(wo)
+			
+			if not (keyword.decode("utf-8") in listSynonymousUnicode):
+				listSynonymousUnicode.append(keyword.decode("utf-8"))
 
-	# 	#tranforme tous les synonymes en unicode
-	# 	ListfinalListSynonymous=[]
-	# 	for word in finalListSynonymous:
-	# 		if isinstance(word,str):
-	# 			word=word.decode("utf-8")
-	# 		ListfinalListSynonymous.append(word)
+			newCoef=float(1)/float((len(listSynonymousUnicode)))
 
-	# 	#tranforme tous les mots de la requête en unicode
-	# 	finalListKeyWord=[]
-	# 	for keyword in  listKeyWords:
-	# 		if isinstance(keyword,str):
-	# 			keyword=keyword.decode("utf-8")
-	# 		finalListKeyWord.append(keyword)
+			#on construit la liste des résultats avec les coeffs 
+			finalListSynonymous=finalListSynonymous+[ (w,newCoef) for w in listSynonymousUnicode]
 
-	# 	for keyword in  finalListKeyWord:
-	# 		if self.tupleBelong((keyword,1) , ListfinalListSynonymous)==False:
-	# 			ListfinalListSynonymous.append((keyword,1))
-	# 	return ListfinalListSynonymous
+		return finalListSynonymous
+
 
 if __name__ == '__main__':
 	reform = reformulationRequest()
 
 	#listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
-	for elt in reform.reformulation1(["personnes", "Intouchables"]):
+	for elt in reform.reformulation3(["personnes", "Intouchables"]):
 		print elt 
