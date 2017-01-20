@@ -190,7 +190,7 @@ class search:
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + \
-					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" (P@5+P@10+P@25)/3 : "+str(averP)
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +"| (P@5+P@10+P@25)/3 : "+str(averP)
 					print "==============================================================="
 					plt.ylabel('Precision moy')
 					plt.xlabel('Rappel moy')
