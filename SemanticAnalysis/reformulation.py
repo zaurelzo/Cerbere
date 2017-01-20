@@ -109,6 +109,23 @@ class reformulationRequest:
 		return finalListSynonymous
 
 
+	def reformulation4(self,listKeywords):
+		resultList=self.sparpqlObject.searchResquestSPARQL(listKeywords)
+		#print resultList
+		#liste résultat en unicode
+		finalList=[]
+		for wo in resultList:
+			if isinstance(wo,str):
+					wo=wo.decode("utf-8")
+			finalList.append((wo,2))
+
+		for keyword in listKeywords:
+			if not (keyword.decode("utf-8") in finalList):
+				finalList.append((keyword.decode("utf-8"),1))
+		return finalList
+
+
+
 if __name__ == '__main__':
 	reform = reformulationRequest()
 
