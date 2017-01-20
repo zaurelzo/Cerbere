@@ -154,8 +154,8 @@ class search:
 						plt.ylabel('Precision (semantic)')
 						plt.xlabel('Rappel (semantic)')
 						print ">>>>>>> Compute done for request "+ str(ind+1) + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-						averP=float((tab_precision[5])+float(tab_precision[10])+float(tab_precision[25]))/float(3)
-						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25]) + " (P@5+P@10+P@25)/3:"+averP
+						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ \
+						str(tab_precision[25])
 						print "===================================================="
 					else:
 							tabAveragePrecisionPerMethod.append(tab_precision)
@@ -198,7 +198,9 @@ class search:
 					plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
 
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + "| P@25 moy :"+ str(tabAveragePrecision[0][25])
+					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
+					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) +\
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25])  + " (P@5+P@10+P@25)/3 : "+ str(averP)
 					print "==============================================================="
 					plt.ylabel('Precision moy(semantic)')
 					plt.xlabel('Rappel moy(semantic)')
@@ -261,7 +263,16 @@ class search:
 			#print finalListResult[0][::-1]
 			return finalListResult[0][::-1]
 
-
+		elif sortMethod=="max":
+			finalListResult=[]
+			for index,subList in enumerate(ListVectorScoresubListSynonimous):
+				if index==0:
+					finalListResult.append(np.array(subList))
+				else:
+					finalListResult[0]=np.maximum(finalListResult[0],np.array(subList))
+			finalListResult[0]= [ (score,list_All_documents_selections[0][i][1]) for i,score in enumerate(finalListResult[0])]
+			finalListResult[0].sort(key=lambda tup: tup[0])
+			return finalListResult[0][::-1]
 
 if __name__ == '__main__':
 	listTermScoreMethod=[]

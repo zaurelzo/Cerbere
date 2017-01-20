@@ -144,9 +144,8 @@ class search:
 						plt.plot(x,y,ListeColor[ind])
 						plt.ylabel('Precision')
 						plt.xlabel('Rappel')
-						print ">>>>>>> Compute done for request "+ str(ind+1) + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-						averP=float((tab_precision[5])+float(tab_precision[10])+float(tab_precision[25]))/float(3)
-						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25]) +" (P@5+P@10+P@25)/3:"+averP
+						print ">>>>>>> Compute done for request "+ str(ind+1) + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)						
+						print "P@5: "+ str(tab_precision[5]) + "| P@10:"+str(tab_precision[10]) + "| P@25:"+ str(tab_precision[25]) 
 						print "===================================================="
 					else:
 							tabAveragePrecisionPerMethod.append(tab_precision)
@@ -189,7 +188,9 @@ class search:
 					plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
 
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
-					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + "| P@25 moy :"+ str(tabAveragePrecision[0][25])
+					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
+					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + \
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" (P@5+P@10+P@25)/3 : "+str(averP)
 					print "==============================================================="
 					plt.ylabel('Precision moy')
 					plt.xlabel('Rappel moy')
