@@ -53,6 +53,32 @@ class sparqlResquest:
 			isProperty=True
 		return isProperty
 
+	#permet de savoir si un des mots est une propriété de la base de connaissances
+	def searchType(self, word):
+		isProperty=False
+
+		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+				PREFIX owl: <http://www.w3.org/2002/07/owl#>
+				PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+				PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+				SELECT ?type
+				WHERE {
+				  	?type a owl:Class.
+				  	?type rdfs:label \"""" + word +"""\"@fr
+				}"""
+		sparql.setQuery(query)
+		sparql.setReturnFormat(JSON)
+		results = sparql.query().convert()
+
+		listResults=[]
+		for result in results["results"]["bindings"]:
+			listResults.append(result)
+
+		if listResults!=[]:
+			isProperty=True
+		return isProperty
+
 
 	def searchWithProperty(self, propertyReq, word):
 		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
@@ -75,16 +101,54 @@ class sparqlResquest:
 		return listResults
 
 
+
+
+	def searchWithLabelAndProperty(self, propertyReq, typeElt, word):
+		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		SELECT ?label
+		WHERE {
+		  	?type rdfs:label \"""" + typeElt +"""\"@fr.
+		 	?object a ?type.
+		    ?property rdfs:label \"""" + propertyReq +"""\"@fr.
+		  	?subject rdfs:label ?labelSubject.
+		  	?object rdfs:label ?label.
+		  	?object ?property ?subject.
+			?object rdfs:label ?label.
+		  	filter((lang(?label)="fr" || lang(?label)="") && (?labelSubject=\"""" + word +"""\"@fr || ?labelSubject=\"""" + word +"""\"))
+		      
+		}"""
+
+		sparql.setQuery(query)
+		sparql.setReturnFormat(JSON)
+		results = sparql.query().convert()
+
+		listResults=[]
+		for result in results["results"]["bindings"]:
+			listResults.append(result["label"]["value"])
+		return listResults
+
+
+
 	#1 correspond au requête de type 1 (synonyme), 3 correspond au requête de type 3 (avec propriété)
 	def whichSearchMethod(self, listKeywords):
 		requestType=1
 		nameProperty=""
+		typeRequest=""
+		result=[]
 		for elt in listKeywords:
 			if self.searchProperty(elt)!=False:
-				requestType=3;
-				nameProperty=elt;
-		result=[requestType, nameProperty]
+				if len(listKeywords)==2:
+					requestType=3
+					nameProperty=elt
+				else:
+					requestType=4
+					nameProperty=elt
+			if self.searchType(elt)!=False:
+				typeRequest = elt
+		result=[requestType,nameProperty,typeRequest]
 		return result
+	
 
 	def searchResquestSPARQL(self, listKeywords):
 		listResults=[]
@@ -98,7 +162,12 @@ class sparqlResquest:
 			for word in listKeywords:
 				if word != methodChoice[1]:
 					word_request=word
-			listResults= self.searchWithProperty(methodChoice[1], word_request)	
+			listResults= self.searchWithProperty(methodChoice[1], word_request)
+		if methodChoice[0]==4 and  sizeListKeywords>2:
+			for word in listKeywords:
+				if word != methodChoice[1] and word != methodChoice[2]:
+					word_request=word
+			listResults= self.searchWithLabelAndProperty(methodChoice[1], methodChoice[2], word_request)
 		return listResults
 
 
@@ -106,7 +175,7 @@ class sparqlResquest:
 if __name__ == '__main__':
 	req = sparqlResquest()
 
-	res = req.searchResquestSPARQL(["personnes", "Intouchables"])
+	res = req.searchResquestSPARQL(["personne", "Intouchables"])
 	print res
 
 
