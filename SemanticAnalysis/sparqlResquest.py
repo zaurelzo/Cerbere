@@ -91,10 +91,11 @@ class sparqlResquest:
 
 		methodChoice=self.whichSearchMethod(listKeywords)
 		sizeListKeywords = len(listKeywords)
-		if methodChoice[0]==1:
-			for word in listKeywords:
-				listResults= listResults+ self.searchSynonymous(word)
-		elif methodChoice[0]==3 and sizeListKeywords==2:
+
+		#if methodChoice[0]==1:
+		#	for word in listKeywords:
+		#			listResults.append(self.searchSynonymous(word))
+		if methodChoice[0]==3 and sizeListKeywords==2: 
 			for word in listKeywords:
 				if word != methodChoice[1]:
 					word_request=word
@@ -106,7 +107,7 @@ class sparqlResquest:
 if __name__ == '__main__':
 	req = sparqlResquest()
 
-	res = req.searchResquestSPARQL(["lieu naissance", "enfant de Trappes"])
-		
+	res = req.searchResquestSPARQL(["personnes", "Intouchables"])
+	print res
 
 
