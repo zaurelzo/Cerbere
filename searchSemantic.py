@@ -236,6 +236,10 @@ class search:
 			list_keywords_synonimous =self.reformulationObject.reformulation3(Liste_requests)
 			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
 
+		elif reformulationType=="ref4":
+			list_keywords_synonimous =self.reformulationObject.reformulation4(Liste_requests)
+			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
+
 
 	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
 	#de renvoyer une liste résultat (qui correspond à la liste des docs selectionnée) 
@@ -286,7 +290,7 @@ if __name__ == '__main__':
 	sortMethod=""
 	if len(sys.argv) != 6:
 		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> \
-		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) > <sum|max>"
+		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) | ref4(list en utilisant la propriété) > <sum|max>"
 		sys.exit(1)
 	else:
 
@@ -296,7 +300,7 @@ if __name__ == '__main__':
 			print ("5th paramater is wrong")
 			sys.exit(1) 
 
-		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2" or sys.argv[4]=="ref3":
+		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2" or sys.argv[4]=="ref3" or sys.argv[4]=="ref4":
 			reformulationType=sys.argv[4]
 		else:
 			print ("4th paramater is wrong")
@@ -319,7 +323,8 @@ if __name__ == '__main__':
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
 	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
 	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"],  ["acteur", "joué avec", "Omar Sy"] ]
+	[ "prix", "Omar Sy"]]
+	#["acteur", "joué avec", "Omar Sy"]
 	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
 
 	search_obj=search()
