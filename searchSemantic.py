@@ -345,7 +345,7 @@ if __name__ == '__main__':
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
 	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
 	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"]]#,["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
 	#["acteur", "joué avec", "Omar Sy"]
 	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
 
