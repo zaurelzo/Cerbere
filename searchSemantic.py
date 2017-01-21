@@ -73,6 +73,7 @@ class search:
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 		#contains the score of each term
 		termScoreVector=[]
+
 		#compute freq vector or IDF vector
 		for keyword,coef in list_of_words_request:
 			freq=0
@@ -125,7 +126,7 @@ class search:
 				return sum(termScoreVector)/div
 
 
-	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType):
+	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType, subReformulationType):
 		tabAveragePrecisionPerMethod=[]
 		tabAverageRappelPerMethod=[]
 
@@ -142,7 +143,7 @@ class search:
 					#DONE : au lieu d'appeler runSearch, on appel notre superbe fonction qui se charge de faire de la 
 					#reformulation.
 					list_doc_selectionnes=self.preTreatementforSemanticSearch(sortMethod,req,termScoreMethod,\
-						documentScoreMethod,reformulationType)
+						documentScoreMethod,reformulationType, subReformulationType)
 
 					#permet d'avoir un tableau de rappel et de précision
 					for elt in  self.eval_obj.calculRappelAndPrecision(list_doc_pertinant,list_doc_selectionnes):
@@ -216,7 +217,7 @@ class search:
 
 
 
-	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType):
+	def preTreatementforSemanticSearch(self,sortMethod,Liste_requests,termScoreMethod,documentScoreMethod,reformulationType, subReformulationType):
 		listDocumentSelectionnes=[]
 		if reformulationType=="ref1":
 			list_keywords_synonimous =self.reformulationObject.reformulation1(Liste_requests)
@@ -239,6 +240,19 @@ class search:
 		elif reformulationType=="ref4":
 			list_keywords_synonimous =self.reformulationObject.reformulation4(Liste_requests)
 			return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
+		elif reformulationType=="ref4+":
+			list_keywords_synonimous =self.reformulationObject.reformulation4Plus(Liste_requests, subReformulationType)
+			if subReformulationType=="ref2":
+				list_All_documents_selectionsBis=[]
+				for listOneCombinaisonBis in list_keywords_synonimous:
+					print listOneCombinaisonBis
+					v=self.runSearch( listOneCombinaisonBis,termScoreMethod,documentScoreMethod)
+					#on trie les documents en fonction de leur nom
+					v.sort(key=lambda tup: tup[1])
+					list_All_documents_selectionsBis.append(v)
+				return self.heuristiqueSortDocuments(sortMethod,list_All_documents_selectionsBis)
+			else:
+				return self.runSearch(list_keywords_synonimous,termScoreMethod,documentScoreMethod)
 
 
 	#TODO finir cette fonction qui permet à partir de des listes des résultats de touutes les combinaisons (pour une requete)
@@ -287,20 +301,28 @@ if __name__ == '__main__':
 	listDocumentScoreMethod=[]
 	per_Query_or_total=""
 	reformulationType=""
+	subReformulationType=""
 	sortMethod=""
-	if len(sys.argv) != 6:
+	if len(sys.argv) != 7:
 		print "[Usage] python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> \
-		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) | ref4(list en utilisant la propriété) > <sum|max>"
+		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) | ref4(list en utilisant la propriété) | ref4+ > \
+		<ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids)> <sum|max>"
 		sys.exit(1)
 	else:
 
-		if sys.argv[5]=="sum" or sys.argv[5]=="max":
-			sortMethod=sys.argv[5]
+		if sys.argv[6]=="sum" or sys.argv[6]=="max":
+			sortMethod=sys.argv[6]
 		else:
-			print ("5th paramater is wrong")
+			print ("6th paramater is wrong")
 			sys.exit(1) 
 
-		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2" or sys.argv[4]=="ref3" or sys.argv[4]=="ref4":
+		if sys.argv[5]=="ref1" or sys.argv[5]=="ref2" or sys.argv[5]=="ref3":
+			subReformulationType=sys.argv[5]
+		else:
+			print ("5th paramater is wrong")
+			sys.exit(1)
+
+		if sys.argv[4]=="ref1" or sys.argv[4]=="ref2" or sys.argv[4]=="ref3" or sys.argv[4]=="ref4" or sys.argv[4]=="ref4+":
 			reformulationType=sys.argv[4]
 		else:
 			print ("4th paramater is wrong")
@@ -323,13 +345,13 @@ if __name__ == '__main__':
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
 	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
 	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"],["personne", "joué avec", "Omar Sy"]]
-	
+	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"]]#,["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	#["acteur", "joué avec", "Omar Sy"]
 	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
 
 	search_obj=search()
 	start_time=time.clock()
 	#print listTermScoreMethod
 	#print listDocumentScoreMethod
-	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total,sortMethod,reformulationType)
+	search_obj.evalTotal(List_requests,listTermScoreMethod,listDocumentScoreMethod,per_Query_or_total,sortMethod,reformulationType, subReformulationType)
 	print ">>>>>>> Total process Time : ", time.clock() - start_time, "seconds"
