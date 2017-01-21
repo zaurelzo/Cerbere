@@ -74,12 +74,12 @@ class reformulationRequest:
 			return []
 		elif len(listOfListofSynonimous)==1:
 			for word in listOfListofSynonimous[0]:
-				listResultOfRequest.append([word])
+				listResultOfRequest.append([[word,1]]) #ajout du poids
 			return listResultOfRequest
 		else:
 			for word in listOfListofSynonimous[0]:
 				for i in self.createAllCombinaision(listOfListofSynonimous[1:]):
-					listResultOfRequest.append([word]+i)
+					listResultOfRequest.append([[word,1]]+i)
 			return listResultOfRequest
 
 
@@ -124,11 +124,39 @@ class reformulationRequest:
 				finalList.append((keyword.decode("utf-8"),1))
 		return finalList
 
+	def reformulation4Plus(self,listKeywords, reformulationOther):
+		resultList=self.sparpqlObject.searchResquestSPARQL(listKeywords)
+		#print resultList
+		#liste résultat en unicode
+		finalList=[]
+		finalListAux=[]
+		for wo in resultList:
+			if isinstance(wo,str):
+				wo=wo.decode("utf-8")
+			finalListAux.append(wo)
+
+
+		if resultList==[]:
+			if reformulationOther=="ref1":
+				finalList=self.reformulation1(listKeywords)
+			elif reformulationOther=="ref2":
+				finalList=self.reformulation2(listKeywords)
+			elif reformulationOther=="ref3":
+				finalList=self.reformulation3(listKeywords)
+		else:
+			for keyword in listKeywords:
+				if not (keyword.decode("utf-8") in finalListAux):
+					finalListAux.append(keyword.decode("utf-8"))
+			for word in finalListAux:
+				finalList.append([[word, 1]])
+
+		return finalList 
+
 
 
 if __name__ == '__main__':
 	reform = reformulationRequest()
 
 	#listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
-	for elt in reform.reformulation3(["personnes", "Intouchables"]):
+	for elt in reform.reformulation1(["personnes", "a joué avec", "Omar Sy"]):
 		print elt 
