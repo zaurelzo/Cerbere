@@ -57,7 +57,7 @@ class sparqlResquest:
 	def searchType(self, word):
 		isProperty=False
 
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 				PREFIX owl: <http://www.w3.org/2002/07/owl#>
 				PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -104,7 +104,7 @@ class sparqlResquest:
 
 
 	def searchWithLabelAndProperty(self, propertyReq, typeElt, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
 		WHERE {
