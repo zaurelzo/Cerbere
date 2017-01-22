@@ -9,6 +9,7 @@ from stop_words import get_stop_words
 from eval.eval import * 
 
 import math
+from math import *
 import sys,os,time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -73,6 +74,7 @@ class search:
 	def computeDocumentScore(self,indiceDoc,list_of_words_request,termScoreMethod,documentScoreMethod):
 		#contains the score of each term
 		termScoreVector=[]
+		queryVector=[]
 
 		#compute freq vector or IDF vector
 		for keyword,coef in list_of_words_request:
@@ -82,48 +84,120 @@ class search:
 				freq = self.db.freqByIdWordIdDoc(idWord, indiceDoc)
 			#else:#debug
 			#	print "------------------idWord vaut -1 pour le mot ", keyword
-			
+
+
+############################################# NOUVELLE VERSION ######################################################
 			if termScoreMethod=="TF":
-				termScoreVector.append(float(freq)*float(coef))
+			  	termScoreVector.append(float(freq))
 			elif termScoreMethod=="TF_IDF":
-				nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
-				IDF=0
-				if nb_doc_contenant_termes>0:
-					IDF = math.log(float(138)/float(nb_doc_contenant_termes))
-				termScoreVector.append(float(IDF)*float(freq)*float(coef))
+			  	nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
+			  	IDF=0
+			  	if nb_doc_contenant_termes>0:
+			  		IDF = math.log(float(138)/float(nb_doc_contenant_termes))
+			  	termScoreVector.append(float(IDF)*float(freq))
+			queryVector.append(float(coef))
+
+######################################################################################################################
+
+			
+############################################# ANCIENNE VERSION ######################################################
+
+			# if termScoreMethod=="TF":
+			# 	termScoreVector.append(float(freq)*float(coef))
+			# elif termScoreMethod=="TF_IDF":
+			# 	nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
+			# 	IDF=0
+			# 	if nb_doc_contenant_termes>0:
+			# 		IDF = math.log(float(138)/float(nb_doc_contenant_termes))
+			# 	termScoreVector.append(float(IDF)*float(freq)*float(coef))
+######################################################################################################################
 		
 		#security
 		if (termScoreVector==[]):
 			print "=====================",list_of_words_request
 			raise NameError("query terms are not in the database")
-		
-		#produit scalaire
-		if documentScoreMethod==1:
-			return sum(termScoreVector)
-		#coef de dice
+
+############################################# NOUVELLE VERSION ######################################################	
+		# # #produit scalaire
+	 	if documentScoreMethod==1:
+		   	return float(sum(np.array(termScoreVector)*np.array(queryVector)))
+
+		 # #coef de dice
 		elif documentScoreMethod==2:
-			square_x= [float(term)*float(term) for term in termScoreVector ]
-			div=(float(sum(square_x))+float(len(list_of_words_request)))
-			if div==0:
-				return 0
-			else:
-				return float(2)*float(sum(termScoreVector))/float(div)
-		#mesure du cosinus
+		   	#Numérateur 
+		    numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+
+			#Dénominateur
+		    square_x= [float(term)*float(term) for term in termScoreVector ]
+		    square_y= [float(coef)*float(coef) for coef in queryVector ]
+		    denominateur = (float(sum(square_x))+float(sum(square_y)))
+		    if denominateur==0:
+		    	return 0
+		    else:
+		    	return float(2)*float(numerateur)/float(denominateur)
+
+		##mesure du cosinus
 		elif documentScoreMethod==3:
-			square_x= [float(term)*float(term) for term in termScoreVector]
-			div=(float(sum(square_x))*float(len(list_of_words_request)))
-			if div==0:
+			#Numérateur 
+			numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+
+			#Dénominateur
+			square_x= [float(term)*float(term) for term in termScoreVector ]
+			square_y= [float(coef)*float(coef) for coef in queryVector ]
+			denominateur = float(sqrt((float(sum(square_x))*float(sum(square_y)))))
+			if denominateur==0:
 				return 0
 			else:
-				return float(sum(termScoreVector))/float(div)
+				return float(numerateur)/float(denominateur)
+
 		#mesure du jaccard
 		elif documentScoreMethod==4:
-			square_x= [float(term)*float(term) for term in termScoreVector ]
-			div=(float(sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
-			if div==0:
-				return 0
-			else:
-				return float(sum(termScoreVector))/float(div)
+		   	#Numérateur 
+		   	numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+
+		   	#Dénominateur
+		   	square_x= [float(term)*float(term) for term in termScoreVector ]
+		   	square_y= [float(coef)*float(coef) for coef in queryVector ]
+		   	denominateur = (float(sum(square_x))+float(sum(square_y))-float(numerateur))
+		   	if denominateur==0:
+		   		return 0
+		   	else:
+		   		return float(numerateur)/float(denominateur)
+######################################################################################################################
+
+############################################# ANCIENNE VERSION ######################################################
+		#produit scalaire
+		# if documentScoreMethod==1:	
+		# 	return sum(termScoreVector)
+
+		# #coef de dice
+		# elif documentScoreMethod==2:
+		#  	square_x= [float(term)*float(term) for term in termScoreVector ]
+		#  	div=(float(sum(square_x))+float(len(list_of_words_request)))
+		#  	if div==0:
+		#  		return 0
+		#  	else:
+		#  		return float(2)*float(sum(termScoreVector))/float(div)
+		# #mesure du cosinus
+		# elif documentScoreMethod==3:
+		#  	square_x= [float(term)*float(term) for term in termScoreVector]
+		#  	div=float(sqrt((float(sum(square_x))*float(len(list_of_words_request)))))
+		#  	if div==0:
+		#  		return 0
+		#  	else:
+		#  		return float(sum(termScoreVector))/float(div)
+		#  #mesure du jaccard
+		# elif documentScoreMethod==4:
+		#  	square_x= [float(term)*float(term) for term in termScoreVector ]
+		#  	div=(float(sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
+		#  	if div==0:
+		#  		return 0
+		#  	else:
+		#  		return float(sum(termScoreVector))/float(div)
+
+######################################################################################################################
+
+		
 
 
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType, subReformulationType):
@@ -342,12 +416,12 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	List_requests= [["personnes", "Intouchables"]]#, [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	# [ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	 ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	 ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	 [ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
 	#["acteur", "joué avec", "Omar Sy"]
-	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
+	#List_requests= [["personne récompensée", "Intouchables"] ]
 
 	search_obj=search()
 	start_time=time.clock()

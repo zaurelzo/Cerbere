@@ -6,7 +6,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 class sparqlResquest:
 	"""docstring for sparqlResquest"""
 	def __init__(self):
-		self.sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
+		self.sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
 
 	def searchSynonymous(self, word):
 		
