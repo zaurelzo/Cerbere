@@ -28,7 +28,7 @@ class search:
 		stop_words_french = get_stop_words('fr')
 		stop_words_french = [stemmer.stem(word.lower()) for word in stop_words_french]
 		#for elt in stop_words_french:
-		#	print "----------------------",elt 
+		#	print "----------------------",elt,len(stop_words_french) 
 		list_keywords_split=[]
 		for word in list_keywords:
 			wordList = word.split()
@@ -227,10 +227,10 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	List_requests= [["personnes", "Intouchables"]]#, [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	# [ "prix", "Omar Sy"],  ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"] ]
+	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	[ "prix", "Omar Sy"],  ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"] ]
 
 	#List_requests= [["personnes", "Intouchables"]]
 
