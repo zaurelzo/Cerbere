@@ -84,13 +84,13 @@ class search:
 			#	print "------------------idWord vaut -1 pour le mot ", keyword
 			
 			if termScoreMethod=="TF":
-				termScoreVector.append(freq*coef)
+				termScoreVector.append(float(freq)*float(coef))
 			elif termScoreMethod=="TF_IDF":
 				nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 				IDF=0
 				if nb_doc_contenant_termes>0:
 					IDF = math.log(float(138)/float(nb_doc_contenant_termes))
-				termScoreVector.append(IDF*freq*coef)
+				termScoreVector.append(float(IDF)*float(freq)*float(coef))
 		
 		#security
 		if (termScoreVector==[]):
@@ -102,28 +102,28 @@ class search:
 			return sum(termScoreVector)
 		#coef de dice
 		elif documentScoreMethod==2:
-			square_x= [term*term for term in termScoreVector ]
-			div=(sum(square_x)+len(list_of_words_request))
+			square_x= [float(term)*float(term) for term in termScoreVector ]
+			div=(float(sum(square_x))+float(len(list_of_words_request)))
 			if div==0:
 				return 0
 			else:
-				return 2*sum(termScoreVector)/div
+				return float(2)*float(sum(termScoreVector))/float(div)
 		#mesure du cosinus
 		elif documentScoreMethod==3:
-			square_x= [term*term for term in termScoreVector]
-			div=(sum(square_x)*len(list_of_words_request))
+			square_x= [float(term)*float(term) for term in termScoreVector]
+			div=(float(sum(square_x))*float(len(list_of_words_request)))
 			if div==0:
 				return 0
 			else:
-				return sum(termScoreVector)/div
+				return float(sum(termScoreVector))/float(div)
 		#mesure du jaccard
 		elif documentScoreMethod==4:
-			square_x= [term*term for term in termScoreVector ]
-			div=(sum(square_x)+len(list_of_words_request)-sum(termScoreVector))
+			square_x= [float(term)*float(term) for term in termScoreVector ]
+			div=(float(sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
 			if div==0:
 				return 0
 			else:
-				return sum(termScoreVector)/div
+				return float(sum(termScoreVector))/float(div)
 
 
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType, subReformulationType):
@@ -342,10 +342,10 @@ if __name__ == '__main__':
 			sys.exit(1)
 	
 
-	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	List_requests= [["personnes", "Intouchables"]]#, [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
+	# ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	# ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	# [ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
 	#["acteur", "joué avec", "Omar Sy"]
 	#List_requests= [["palmarès", "Globes de Cristal 2012"] ]
 
