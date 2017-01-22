@@ -62,11 +62,13 @@ class reformulationRequest:
 
 		return self.createAllCombinaision(FinalListOfListofSynonimous)
 
+
 	def tupleBelong(self,elt,listTuple):
 		for a,b in listTuple:
 			if elt==(a,b):
 				return True
 		return False
+
 
 	def createAllCombinaision(self,listOfListofSynonimous):		
 		listResultOfRequest=[]

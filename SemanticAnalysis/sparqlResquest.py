@@ -6,10 +6,10 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 class sparqlResquest:
 	"""docstring for sparqlResquest"""
 	def __init__(self):
-		pass
+		self.sparql = SPARQLWrapper("http://localhost:3030/ontologies_omar_sy")
 
 	def searchSynonymous(self, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
+		
 		query = """
 		    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
@@ -18,9 +18,9 @@ class sparqlResquest:
 		  ?subject rdfs:label ?label
 		}"""  		
 
-  		sparql.setQuery(query)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+  		self.sparql.setQuery(query)
+		self.sparql.setReturnFormat(JSON)
+		results = self.sparql.query().convert()
 
 		listResults=[]
 		for result in results["results"]["bindings"]:
@@ -30,8 +30,6 @@ class sparqlResquest:
 	#permet de savoir si un des mots est une propriété de la base de connaissances
 	def searchProperty(self, word):
 		isProperty=False
-
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 				PREFIX owl: <http://www.w3.org/2002/07/owl#>
 				PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -41,9 +39,9 @@ class sparqlResquest:
 				  	?type a owl:ObjectProperty.
 				  	?type rdfs:label \"""" + word +"""\"@fr
 				}"""
-		sparql.setQuery(query)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+		self.sparql.setQuery(query)
+		self.sparql.setReturnFormat(JSON)
+		results = self.sparql.query().convert()
 
 		listResults=[]
 		for result in results["results"]["bindings"]:
@@ -56,8 +54,6 @@ class sparqlResquest:
 	#permet de savoir si un des mots est une propriété de la base de connaissances
 	def searchType(self, word):
 		isProperty=False
-
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 				PREFIX owl: <http://www.w3.org/2002/07/owl#>
 				PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -67,9 +63,9 @@ class sparqlResquest:
 				  	?type a owl:Class.
 				  	?type rdfs:label \"""" + word +"""\"@fr
 				}"""
-		sparql.setQuery(query)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+		self.sparql.setQuery(query)
+		self.sparql.setReturnFormat(JSON)
+		results = self.sparql.query().convert()
 
 		listResults=[]
 		for result in results["results"]["bindings"]:
@@ -81,7 +77,6 @@ class sparqlResquest:
 
 
 	def searchWithProperty(self, propertyReq, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
 		WHERE {
@@ -91,9 +86,9 @@ class sparqlResquest:
 			?object rdfs:label ?label
 		}"""
 
-		sparql.setQuery(query)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+		self.sparql.setQuery(query)
+		self.sparql.setReturnFormat(JSON)
+		results = self.sparql.query().convert()
 
 		listResults=[]
 		for result in results["results"]["bindings"]:
@@ -104,7 +99,6 @@ class sparqlResquest:
 
 
 	def searchWithLabelAndProperty(self, propertyReq, typeElt, word):
-		sparql = SPARQLWrapper("http://localhost:3030/Base_de_connaissances")
 		query = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		SELECT ?label
 		WHERE {
@@ -119,9 +113,9 @@ class sparqlResquest:
 		      
 		}"""
 
-		sparql.setQuery(query)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+		self.sparql.setQuery(query)
+		self.sparql.setReturnFormat(JSON)
+		results = self.sparql.query().convert()
 
 		listResults=[]
 		for result in results["results"]["bindings"]:
@@ -174,7 +168,6 @@ class sparqlResquest:
 
 if __name__ == '__main__':
 	req = sparqlResquest()
-
 	res = req.searchResquestSPARQL(["lieu naissance", "enfant de Trappes"])
 	print res
 
