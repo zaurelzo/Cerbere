@@ -158,5 +158,5 @@ if __name__ == '__main__':
 	reform = reformulationRequest()
 
 	#listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
-	for elt in reform.reformulation1(["personnes", "a joué avec", "Omar Sy"]):
+	for elt in reform.reformulation2(["personnes", "Intouvhables"]):
 		print elt 
