@@ -118,7 +118,7 @@ class reformulationRequest:
 		finalList=[]
 		for wo in resultList:
 			if isinstance(wo,str):
-					wo=wo.decode("utf-8")
+				wo=wo.decode("utf-8")
 			finalList.append((wo,1))
 
 		for keyword in listKeywords:

@@ -10,6 +10,7 @@ from stop_words import get_stop_words
 from eval.eval import * 
 
 import math
+from math import *
 import sys,os,time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,8 +44,8 @@ class search:
 			else:
 				word=word.lower()
 
-			if (stemmer.stem(word) in stop_words_french)==False:
-				list_of_words_request.append(stemmer.stem(word))
+			#if (stemmer.stem(word) in stop_words_french)==False:
+			list_of_words_request.append(stemmer.stem(word))
 		#for elt in list_of_words_request:
 		#	print elt
 
@@ -104,15 +105,15 @@ class search:
 				return float(2)*float(sum(termScoreVector))/float(div)
 		#mesure du cosinus
 		elif documentScoreMethod==3:
-			square_x= [term*term for term in termScoreVector]
-			div=float((sum(square_x))*float(len( list_of_words_request)))
+			square_x= [float(term)*float(term) for term in termScoreVector ]
+			div=float(sqrt(float((sum(square_x))*float(len( list_of_words_request)))))
 			if div==0:
 				return 0
 			else:
 				return float(sum(termScoreVector))/float(div)
 		#mesure du jaccard
 		elif documentScoreMethod==4:
-			square_x= [term*term for term in termScoreVector ]
+			square_x= [float(term)*float(term) for term in termScoreVector ]
 			div=float((sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
 			if div==0:
 				return 0

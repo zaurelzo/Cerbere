@@ -13,7 +13,7 @@ from math import *
 import sys,os,time
 import numpy as np
 import matplotlib.pyplot as plt
-from SemanticAnalysis.reformulation import * 
+from SemanticAnalysis.reformulation import *
 
 class search:
 	"""docstring for Search"""
@@ -22,7 +22,6 @@ class search:
 		self.db = databaseManager()
 		self.eval_obj= eval()
 		self.reformulationObject = reformulationRequest()
-
 
 	#retourne liste ordonnée documents pertinents
 	def runSearch(self, list_keywords,termScoreMethod,documentScoreMethod):
@@ -49,8 +48,8 @@ class search:
 			else:
 				word=word.lower()
 			#print "*************",stemmer.stem(word)
-			if (word in stop_words_french)==False:
-				list_of_words_request.append((stemmer.stem(word),coef))
+			#if (word in stop_words_french)==False:
+			list_of_words_request.append((stemmer.stem(word),coef))
 		
 		#for elt in stop_words_french:
 		#	print "******************",elt
@@ -319,7 +318,6 @@ class search:
 			if subReformulationType=="ref2":
 				list_All_documents_selectionsBis=[]
 				for listOneCombinaisonBis in list_keywords_synonimous:
-					print listOneCombinaisonBis
 					v=self.runSearch( listOneCombinaisonBis,termScoreMethod,documentScoreMethod)
 					#on trie les documents en fonction de leur nom
 					v.sort(key=lambda tup: tup[1])
