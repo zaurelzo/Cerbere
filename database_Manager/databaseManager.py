@@ -30,6 +30,7 @@ class databaseManager:
     	FOREIGN KEY (idIndex) REFERENCES IndexTable(idIndex), \
     	FOREIGN KEY (idDocuments) REFERENCES  Documents(idDocuments) \
 		);""")
+		#print "end creation tables..."
 
 
 

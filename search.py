@@ -131,7 +131,7 @@ class search:
 				ListeColor=["b","g","r","c","m","y","k","r","g"]
 
 				for ind,req in enumerate(Liste_requests):
-					list_doc_pertinant= self.eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(ind+1)+".txt")
+					list_doc_pertinant= self.eval_obj.readFileQrels("RessourcesProjet/qrels/qrelQ"+str(6+1)+".txt")
 					#print "requete en cours " , req
 					list_doc_selectionnes=self.runSearch(req,termScoreMethod,documentScoreMethod)
 
@@ -193,7 +193,7 @@ class search:
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + \
-					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25) : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25)/3 : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
 					print "==============================================================="
 					plt.ylabel('Precision moy')
 					plt.xlabel('Rappel moy')

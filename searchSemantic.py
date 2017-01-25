@@ -237,7 +237,7 @@ class search:
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) +\
-					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25) : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25)/3 : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
 					print "==============================================================="
 					plt.ylabel('Precision moy(semantic)')
 					plt.xlabel('Rappel moy(semantic)')
@@ -374,11 +374,11 @@ if __name__ == '__main__':
 	
 
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	 ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"], 
+	 ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"], 
+	 [ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
 	#["acteur", "joué avec", "Omar Sy"]
-	#List_requests= [[ "lieu", "Globes Cristal 2012"]]
+	#List_requests= [["personnes", "Intouchables"]]
 
 	search_obj=search()
 	start_time=time.clock()

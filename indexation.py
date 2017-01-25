@@ -1,26 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import time 
+import time,sys
 from parser.parser import * 
 from database_Manager.databaseManager import *
 from collections import Counter
 
 if __name__ == '__main__':
 	#global Variables, chnages for a specific action (1 : do the action , 0 : don't do the action)
-	DELETE_TABLES=0
-	CREATE_TABLE=0
+	action=0
+
+	if len(sys.argv) != 2:
+		print "[Usage] python search.py <0(deleteTable) | 1 (creatTable) | 2 (run indexation)"
+		sys.exit(1)
+	else:
+		if sys.argv[1]!="0" and sys.argv[1]!="1" and sys.argv[1]!="2" :
+			print "first argument should be 0 or 1 or 2"
+			sys.exit(1)
+		action=int(sys.argv[1])
 
 
 	myParser=parser()
 	myDatabaseManager=databaseManager()
 
-	if (DELETE_TABLES):
+	if action==0:
 		print ("delete tables...")
 		myDatabaseManager.deleteTables()
-	elif(CREATE_TABLE):
+		sys.exit(0)
+	elif action==1:
 		print "create tables..."
 		myDatabaseManager.createTables()
+		#print "fdf"
+		sys.exit(0)
 	else:
 		start_time=time.clock()
 		#words to add in the database (to not have duplicates words)

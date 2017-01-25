@@ -1,3 +1,4 @@
+#!/bin/bash
 
 #tools
 sudo apt-get install python-pip libmysqlclient-dev python-dev python-mysqldb
@@ -17,5 +18,3 @@ sudo pip install nltk
 
 #plot
 sudo pip install matplotlib
-
-#La requete 5 n'est pas adapté
