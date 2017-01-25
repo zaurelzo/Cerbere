@@ -76,12 +76,12 @@ class reformulationRequest:
 			return []
 		elif len(listOfListofSynonimous)==1:
 			for word in listOfListofSynonimous[0]:
-				listResultOfRequest.append([[word,1]]) #ajout du poids
+				listResultOfRequest.append([(word,float(1))]) #ajout du poids
 			return listResultOfRequest
 		else:
 			for word in listOfListofSynonimous[0]:
 				for i in self.createAllCombinaision(listOfListofSynonimous[1:]):
-					listResultOfRequest.append([[word,1]]+i)
+					listResultOfRequest.append([(word,float(1))]+i)
 			return listResultOfRequest
 
 
@@ -119,11 +119,11 @@ class reformulationRequest:
 		for wo in resultList:
 			if isinstance(wo,str):
 				wo=wo.decode("utf-8")
-			finalList.append((wo,1))
+			finalList.append((wo,float(1)))
 
 		for keyword in listKeywords:
 			if not (keyword.decode("utf-8") in finalList):
-				finalList.append((keyword.decode("utf-8"),1))
+				finalList.append((keyword.decode("utf-8"),float(1)))
 		return finalList
 
 	def reformulation4Plus(self,listKeywords, reformulationOther):
@@ -150,7 +150,7 @@ class reformulationRequest:
 				if not (keyword.decode("utf-8") in finalListAux):
 					finalListAux.append(keyword.decode("utf-8"))
 			for word in finalListAux:
-				finalList.append([[word, 1]])
+				finalList.append([[word, float(1)]])
 
 		return finalList 
 
@@ -159,6 +159,6 @@ class reformulationRequest:
 if __name__ == '__main__':
 	reform = reformulationRequest()
 
-	#listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
-	for elt in reform.reformulation1(["personne", "a joué avec", "Omar Sy"]):
+	listKeywords=[["prix", "recompense","award"],["omar","caira"],["super","good","génial"]]
+	for elt in reform.createAllCombinaision(listKeywords):
 		print elt 

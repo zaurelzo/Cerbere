@@ -84,67 +84,58 @@ class search:
 			#else:#debug
 			#	print "------------------idWord vaut -1 pour le mot ", keyword
 
-
-############################################# NOUVELLE VERSION ######################################################
 			if termScoreMethod=="TF":
 			  	termScoreVector.append(float(freq))
 			elif termScoreMethod=="TF_IDF":
+				IDF=0
 			  	nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
-			  	IDF=0
 			  	if nb_doc_contenant_termes>0:
-			  		IDF = math.log(float(138)/float(nb_doc_contenant_termes))
+			  		IDF = float(math.log(float(138))/float(nb_doc_contenant_termes))
 			  	termScoreVector.append(float(IDF)*float(freq))
 			queryVector.append(float(coef))
 
-######################################################################################################################
-
-			
-############################################# ANCIENNE VERSION ######################################################
-
-			# if termScoreMethod=="TF":
-			# 	termScoreVector.append(float(freq)*float(coef))
-			# elif termScoreMethod=="TF_IDF":
-			# 	nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
-			# 	IDF=0
-			# 	if nb_doc_contenant_termes>0:
-			# 		IDF = math.log(float(138)/float(nb_doc_contenant_termes))
-			# 	termScoreVector.append(float(IDF)*float(freq)*float(coef))
-######################################################################################################################
 		
 		#security
 		if (termScoreVector==[]):
-			print "=====================",list_of_words_request
 			raise NameError("query terms are not in the database")
 
-############################################# NOUVELLE VERSION ######################################################	
 		# # #produit scalaire
 	 	if documentScoreMethod==1:
-		   	return float(sum(np.array(termScoreVector)*np.array(queryVector)))
+	 		#print "*************",queryVector[0]
+	 		arrayMul=[ float(v)*float(queryVector[i]) for i,v in enumerate(termScoreVector) ]
+	 		return float(sum(arrayMul))
+		   	#return float(sum(np.array(termScoreVector)*np.array(queryVector)))
 
 		 # #coef de dice
 		elif documentScoreMethod==2:
-		   	#Numérateur 
-		    numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
-
-			#Dénominateur
-		    square_x= [float(term)*float(term) for term in termScoreVector ]
-		    square_y= [float(coef)*float(coef) for coef in queryVector ]
-		    denominateur = (float(sum(square_x))+float(sum(square_y)))
-		    if denominateur==0:
-		    	return 0
-		    else:
-		    	return float(2)*float(numerateur)/float(denominateur)
-
-		##mesure du cosinus
-		elif documentScoreMethod==3:
-			#Numérateur 
-			numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+		   	#Numérateur
+		   	arrayMul=[ float(v)*float(queryVector[i]) for i,v in enumerate(termScoreVector) ]
+		   	numerateur=float(sum(arrayMul))
+		   	#numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
 
 			#Dénominateur
 			square_x= [float(term)*float(term) for term in termScoreVector ]
 			square_y= [float(coef)*float(coef) for coef in queryVector ]
-			denominateur = float(sqrt((float(sum(square_x))*float(sum(square_y)))))
-			if denominateur==0:
+			denominateur = float(sum(square_x))+float(sum(square_y))
+			if denominateur==0.0:
+				return 0
+			else:
+				return float(2)*float(numerateur)/float(denominateur)
+
+		##mesure du cosinus
+		elif documentScoreMethod==3:
+			#Numérateur
+			arrayMul=[ float(v)*float(queryVector[i]) for i,v in enumerate(termScoreVector) ]
+		   	numerateur=float(sum(arrayMul))
+		   	#for inp,va in enumerate(termScoreVector):
+		   	#	print str(float(va)*float(queryVector[inp]))
+			#numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+
+			#Dénominateur
+			square_x= [float(term)*float(term) for term in termScoreVector ]
+			square_y= [float(coef)*float(coef) for coef in queryVector ]
+			denominateur = float(sqrt(float(sum(square_x))*float(sum(square_y))))
+			if denominateur==0.0:
 				return 0
 			else:
 				return float(numerateur)/float(denominateur)
@@ -152,51 +143,19 @@ class search:
 		#mesure du jaccard
 		elif documentScoreMethod==4:
 		   	#Numérateur 
-		   	numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
+		   	arrayMul=[ float(v)*float(queryVector[i]) for i,v in enumerate(termScoreVector) ]
+		   	numerateur=float(sum(arrayMul))
+		   	#numerateur = float(sum(np.array(termScoreVector)*np.array(queryVector)))
 
 		   	#Dénominateur
 		   	square_x= [float(term)*float(term) for term in termScoreVector ]
 		   	square_y= [float(coef)*float(coef) for coef in queryVector ]
-		   	denominateur = (float(sum(square_x))+float(sum(square_y))-float(numerateur))
-		   	if denominateur==0:
+		   	denominateur = float(sum(square_x))+float(sum(square_y))-float(numerateur)
+		   	if denominateur==0.0:
 		   		return 0
 		   	else:
 		   		return float(numerateur)/float(denominateur)
-######################################################################################################################
 
-############################################# ANCIENNE VERSION ######################################################
-		#produit scalaire
-		# if documentScoreMethod==1:	
-		# 	return sum(termScoreVector)
-
-		# #coef de dice
-		# elif documentScoreMethod==2:
-		#  	square_x= [float(term)*float(term) for term in termScoreVector ]
-		#  	div=(float(sum(square_x))+float(len(list_of_words_request)))
-		#  	if div==0:
-		#  		return 0
-		#  	else:
-		#  		return float(2)*float(sum(termScoreVector))/float(div)
-		# #mesure du cosinus
-		# elif documentScoreMethod==3:
-		#  	square_x= [float(term)*float(term) for term in termScoreVector]
-		#  	div=float(sqrt((float(sum(square_x))*float(len(list_of_words_request)))))
-		#  	if div==0:
-		#  		return 0
-		#  	else:
-		#  		return float(sum(termScoreVector))/float(div)
-		#  #mesure du jaccard
-		# elif documentScoreMethod==4:
-		#  	square_x= [float(term)*float(term) for term in termScoreVector ]
-		#  	div=(float(sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
-		#  	if div==0:
-		#  		return 0
-		#  	else:
-		#  		return float(sum(termScoreVector))/float(div)
-
-######################################################################################################################
-
-		
 
 
 	def evalTotal(self,Liste_requests,listTermScoreMethod,listDocumentScoreMethod,perQueryOrTotal,sortMethod,reformulationType, subReformulationType):
@@ -273,12 +232,12 @@ class search:
 
 					plt.plot(toPlotRappel,toPlotPrecision,ListeColor[indDocumentScoreMethode+indtermScoreMethod-1],linewidth=1.5, linestyle="-",\
 					 label="Met "+ termScoreMethod + " " +str(documentScoreMethod ) )
-					plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
+					plt.legend(shadow=True, fancybox=True)
 
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) +\
-					"| P@25 moy :"+ str(tabAveragePrecision[0][25])  + " | (P@5+P@10+P@25)/3 : "+ str(averP)
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25) : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
 					print "==============================================================="
 					plt.ylabel('Precision moy(semantic)')
 					plt.xlabel('Rappel moy(semantic)')
@@ -415,11 +374,11 @@ if __name__ == '__main__':
 	
 
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
-	 ["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
-	 ["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	 [ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
+	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
+	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
+	[ "prix", "Omar Sy"], ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"]]
 	#["acteur", "joué avec", "Omar Sy"]
-	#List_requests= [["personne récompensée", "Intouchables"] ]
+	#List_requests= [[ "lieu", "Globes Cristal 2012"]]
 
 	search_obj=search()
 	start_time=time.clock()

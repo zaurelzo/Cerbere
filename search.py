@@ -46,8 +46,6 @@ class search:
 
 			#if (stemmer.stem(word) in stop_words_french)==False:
 			list_of_words_request.append(stemmer.stem(word))
-		#for elt in list_of_words_request:
-		#	print elt
 
 		# by default, documents score are equal to zero
 		scoreNameDoc=[(0, "D"+str(i+1)+".html") for i in range(138)]
@@ -81,11 +79,11 @@ class search:
 			if termScoreMethod=="TF":
 				termScoreVector.append(float(freq))
 			elif termScoreMethod=="TF_IDF":
-				nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 				IDF=0
+				nb_doc_contenant_termes=self.db.countNbAppareancesWord(idWord)
 				if nb_doc_contenant_termes>0:
-					IDF = math.log(float(138)/float(nb_doc_contenant_termes))
-				termScoreVector.append(IDF*freq)
+					IDF = float(math.log(float(138)/float(nb_doc_contenant_termes)))
+				termScoreVector.append(float(IDF)*float(freq))
 		
 		#security
 		if (termScoreVector==[]):
@@ -99,23 +97,24 @@ class search:
 			square_x= [float(term)*float(term) for term in termScoreVector ]
 			div=float(sum(square_x))+float(len(list_of_words_request))
 			#print div
-			if div==0:
+			if div==0.0:
 				return 0
 			else:
-				return float(2)*float(sum(termScoreVector))/float(div)
+				return (float(2)*float(sum(termScoreVector)))/float(div)
 		#mesure du cosinus
 		elif documentScoreMethod==3:
 			square_x= [float(term)*float(term) for term in termScoreVector ]
-			div=float(sqrt(float((sum(square_x))*float(len( list_of_words_request)))))
-			if div==0:
+			div=float(sqrt(float((sum(square_x)))*float(len(list_of_words_request))))
+			if div==0.0:
 				return 0
 			else:
 				return float(sum(termScoreVector))/float(div)
 		#mesure du jaccard
 		elif documentScoreMethod==4:
 			square_x= [float(term)*float(term) for term in termScoreVector ]
-			div=float((sum(square_x))+float(len(list_of_words_request))-float(sum(termScoreVector)))
-			if div==0:
+			div=float((sum(square_x)))+float(len(list_of_words_request))-float(sum(termScoreVector))
+			#print div
+			if div==0.0:
 				return 0
 			else:
 				return float(sum(termScoreVector))/float(div)
@@ -189,12 +188,12 @@ class search:
 
 					plt.plot(toPlotRappel,toPlotPrecision,ListeColor[indDocumentScoreMethode+indtermScoreMethod-1],linewidth=1.5, linestyle="-",\
 					 label="Met "+ termScoreMethod + " " +str(documentScoreMethod ) )
-					plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
-
+					#plt.legend(bbox_to_anchor=(0., 1.05, 1., .105), loc=0,ncol=3, mode="expand", borderaxespad=0.)
+					plt.legend(shadow=True, fancybox=True)
 					print ">>>>>>> Compute done for method "+ per_Query_or_total + " with parameters "+ termScoreMethod + " and " + str(documentScoreMethod)
 					averP=(float(tabAveragePrecision[0][5])+float(tabAveragePrecision[0][10])+float(tabAveragePrecision[0][25]))/float(3)
 					print "P@5 moy : "+ str(tabAveragePrecision[0][5]) + "| P@10 moy :"+str(tabAveragePrecision[0][10]) + \
-					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +"| (P@5+P@10+P@25)/3 : "+str(averP)
+					"| P@25 moy :"+ str(tabAveragePrecision[0][25]) +" | (P@5,10,25) : "+ str(averP)+"|Total average: "+str(np.average(tabAveragePrecision[0]))
 					print "==============================================================="
 					plt.ylabel('Precision moy')
 					plt.xlabel('Rappel moy')
@@ -231,9 +230,9 @@ if __name__ == '__main__':
 	List_requests= [["personnes", "Intouchables"], [ "lieu naissance", "Omar Sy"], ["personne récompensée", "Intouchables"],
 	["palmarès", "Globes de Cristal 2012"],[ "membre jury", "Globes de Cristal 2012"],
 	["prix", "Omar Sy", "Globes de Cristal 2012"],[ "lieu", "Globes Cristal 2012"],
-	[ "prix", "Omar Sy"],  ["acteur", "a joué avec", "Omar Sy"],["prix", "enfant de Trappes"],["personne", "a joué avec", "Omar Sy"] ]
+	[ "prix", "Omar Sy"],  ["acteur", "a joué avec", "Omar Sy"]]
 
-	#List_requests= [["personnes", "Intouchables"]]
+	#List_requests= [[ "lieu", "Globes Cristal 2012"]]
 
 	search_obj=search()
 	start_time=time.clock()

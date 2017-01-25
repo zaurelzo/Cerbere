@@ -48,6 +48,9 @@ if __name__ == '__main__':
 				print "parsing done for : "+ path
 
 		addWordsList.sort()
+		#file = open("save_file", "r+")
+		#for elt in addWordsList:
+		#	file.write(elt+"\n")
 		#for word in addWordsList:
 		#	print "===> " +  word
 		print ">>>>>>> Number of words :" + str(len(addWordsList))

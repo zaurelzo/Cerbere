@@ -71,8 +71,8 @@ class databaseManager:
 		self.cursor.execute(""" DROP TABLE Documents ;""")
 
 
-	def getIdByWord(self, word):
-		self.cursor.execute("""SELECT idIndex FROM IndexTable WHERE word = '%s'""" % (word))
+	def getIdByWord(self, word_):
+		self.cursor.execute("""SELECT idIndex FROM IndexTable WHERE word = '%s'""" % (word_))
 		result = self.cursor.fetchone()
 		if result is not None:
 			return result[0]
