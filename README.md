@@ -23,9 +23,9 @@ syntaxic and semantic web indexer and their search engine
   ```bash
    python search.py <TF|TF_IDF> <1|2|3|4> <perQuery|total>
   ```
-  the first parameter is term ponderation : TF or TF*IDF
-  the second paramter is the similarity method used  : 1: inner product, 2:Coef. de Dice, 3:Cosinus measure, 4: Jaccard measure
-  the fird paramater enable to run the query for just the parametered method (perQuery) or run the query for all methods(total)  
+  *the first parameter is term ponderation : TF or TF*IDF
+  *the second paramter is the similarity method used  : 1: inner product, 2:Coef. de Dice, 3:Cosinus measure, 4: Jaccard measure
+  *the fird paramater enable to run the query for just the parametered method (perQuery) or run the query for all methods(total)  
   
 
 
