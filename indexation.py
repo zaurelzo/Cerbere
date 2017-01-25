@@ -26,12 +26,9 @@ if __name__ == '__main__':
 	if action==0:
 		print ("delete tables...")
 		myDatabaseManager.deleteTables()
-		sys.exit(0)
 	elif action==1:
 		print "create tables..."
 		myDatabaseManager.createTables()
-		#print "fdf"
-		sys.exit(0)
 	else:
 		start_time=time.clock()
 		#words to add in the database (to not have duplicates words)
