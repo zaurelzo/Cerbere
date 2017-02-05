@@ -1,6 +1,6 @@
 # Cerbere
 
-syntaxic and semantic web indexer and their search engine
+syntaxic and semantic web indexer and their search engines
 
 ## Install
   ```bash
@@ -38,3 +38,4 @@ syntaxic and semantic web indexer and their search engine
     python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> 
     <ref1(list syn)|ref2(combinaisons)|ref3(list syn avec poids) | ref4 | ref4+ > <ref1(list syn)|ref2(combinaisons)|ref3> <sum|max>
   ```
+  todo : Explain these parameters (one day ?)
