@@ -1,6 +1,6 @@
 # Cerbere
 
-syntaxic and semantic web indexer and their search engines
+syntaxic and semantic web indexer and their search engine
 
 ## Install
   ```bash
@@ -9,8 +9,8 @@ syntaxic and semantic web indexer and their search engines
 
 
 ## How to use the project ? 
-  First of all, you need to index all html documents.You need to have mySQL database called cerbere_db
-  To run it:
+  First of all, you need to index all html documents.You must create a mySQL database called cerbere_db.
+  To run the indexer:
 ```bash
   python indexation number
 ```
@@ -25,14 +25,13 @@ syntaxic and semantic web indexer and their search engines
   ```
   * The first parameter is term ponderation : TF or TF*IDF 
   * The second paramter is the similarity method used  : 1: inner product, 2:Coef. de Dice, 3:Cosinus measure, 4: Jaccard measure 
-  * The fird paramater enable to run the query for just the parametered method (perQuery) or run the query for all methods(total)  
+  * The third paramater allowed you to run the query for just the parametered method (perQuery) or to run it for all methods(total)  
   
 
 
 ## Run the semantic search engine
-  The syntaxic search engine is implemented in the file searchSemantic.py
-  Youn need to install the fuseki server if you want to use this method. You will also need to rename the ontology used. It's can be done 
-  by renamed it in the file sparqlRequest.py
+  The semantic search engine is implemented in the file searchSemantic.py
+  Youn must install the fuseki server (https://jena.apache.org/documentation/serving_data/) if you want to use this method. You will also need to rename the ontology used. It can be done by renamed it in the file sparqlRequest.py
   To run it : 
   ```bash
     python searchSemantic.py <TF|TF_IDF> <1|2|3|4> <perQuery|total> 
